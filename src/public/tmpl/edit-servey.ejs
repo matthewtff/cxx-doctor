@@ -1,0 +1,126 @@
+<div class="edit-servey">
+	<div class="edit-servey_field">
+		<span class="edit-servey_label"><%=_T("Patient")%></span>
+	<%
+		if (servey.patient) {
+	%>
+		<input class="edit-servey_input" id="patient-search-string" name="patient" onkeyup="window.edit_servey.searchPatients();" value="<%=servey.patient%>"/>
+		<input class="edit-servey_input" id="patient-id" name="patient_id" type="hidden" value="<%=servey.patient_id%>" />
+	<%
+		} else {
+	%>
+		<input class="edit-servey_input" id="patient-search-string" name="patient" onkeyup="window.edit_servey.searchPatients();"/>
+		<input class="edit-servey_input" id="patient-id" name="patient-id" type="hidden" />
+	<%
+		}
+	%>
+		<span class="edit-servey_create-patient_button button" onclick="window.menu.showEditPatient();" ><%=_T("Create patient")%></span>
+	</div>
+	<div class="edit-servey_patient-list">
+	</div>
+
+	<%
+		if (!servey.date)
+			servey.date = window.utils.htmlDate();
+	%>
+
+	<div class="edit-servey_field">
+		<span class="edit-servey_label"><%=_T("Date")%></span>
+		<input type="date" class="edit-servey_input" name="date" value="<%=servey.date%>" />
+	</div>
+	<div class="edit-servey_field">
+		<span class="edit-servey_label"><%=_T("Sender")%></span>
+		<input class="edit-servey_input" name="sender" value="<%=servey.sender%>" />
+	</div>
+
+
+	<div class="edit-servey_field">
+		<span class="edit-servey_label"><%=_T("Diagnosis")%></span>
+	<%
+		if (servey.diagnosis) {
+	%>
+		<input class="edit-servey_input" id="diagnosis-search-string" name="diagnosis" value="<%=servey.diagnosis%>" onkeyup="window.edit_servey.searchDiagnosis();"/>
+		<input class="edit-servey_input" id="diagnosis-code" name="diagnosis_key" type="hidden" value="<%=servey.diagnosis_key%>" />
+	<%
+		} else {
+	%>
+		<input class="edit-servey_input" id="diagnosis-search-string" name="type" onkeyup="window.edit_servey.searchDiagnosis();"/>
+		<input class="edit-servey_input" id="diagnosis-code" name="type-code" type="hidden" />
+	<%
+		}
+	%>
+	</div>
+	<div class="edit-servey_diagnosis-list">
+	</div>
+
+
+	<div class="edit-servey_field">
+		<span style="margin-bottom: 20px;" class="edit-servey_label"><%=_T("Servey type")%></span>
+		<span class="edit-servey-type-choice button" data="upper_arteries" onclick="window.edit_servey.toggleType('upper_arteries', this)">Артерии верхних конечностей</span>
+		<span class="edit-servey-type-choice button" data="lower_arteries" onclick="window.edit_servey.toggleType('lower_arteries', this)">Артерии нижних конечностей</span>
+		<span class="edit-servey-type-choice button" data="abdominal_aorta" onclick="window.edit_servey.toggleType('abdominal_aorta', this)">Брюшной отдел аорты</span>
+		<span class="edit-servey-type-choice button" data="lower_venous" onclick="window.edit_servey.toggleType('lower_venous', this)">Вены нижних конечностей</span>
+		<span class="edit-servey-type-choice button" data="head_arteries" onclick="window.edit_servey.toggleType('head_arteries', this)">Магистральные артерии головы</span>
+		<span class="edit-servey-type-choice button" data="breast" onclick="window.edit_servey.toggleType('breast', this)">Молочные железы</span>
+		<span class="edit-servey-type-choice button" data="bladder" onclick="window.edit_servey.toggleType('bladder', this)">Мочевой пузырь</span>
+		<span class="edit-servey-type-choice button" data="adrenal" onclick="window.edit_servey.toggleType('adrenal', this)">Надпочечники</span>
+		<span class="edit-servey-type-choice button" data="parathyroid" onclick="window.edit_servey.toggleType('parathyroid', this)">Околощитовидные железы</span>
+		<span class="edit-servey-type-choice button" data="abdomen" onclick="window.edit_servey.toggleType('abdomen', this)">Брюшная полость</span>
+		<span class="edit-servey-type-choice button" data="pelvic" onclick="window.edit_servey.toggleType('pelvic', this)">Малый таз</span>
+		<span class="edit-servey-type-choice button" data="scrotum" onclick="window.edit_servey.toggleType('scrotum', this)">Мошонка</span>
+		<span class="edit-servey-type-choice button" data="spleen" onclick="window.edit_servey.toggleType('spleen', this)">Селезёнка</span>
+		<span class="edit-servey-type-choice button" data="kidneys" onclick="window.edit_servey.toggleType('kidneys', this)">Почки</span>
+		<span class="edit-servey-type-choice button" data="renal_artery" onclick="window.edit_servey.toggleType('renal_artery', this)">Почечные артерии</span>
+		<span class="edit-servey-type-choice button" data="prostate" onclick="window.edit_servey.toggleType('prostate', this)">Предстательная железа</span>
+		<span class="edit-servey-type-choice button" data="salivary_glands" onclick="window.edit_servey.toggleType('salivary_glands', this)">Слюнных железы</span>
+		<span class="edit-servey-type-choice button" data="thyroid_gland" onclick="window.edit_servey.toggleType('thyroid_gland', this)">Щитовидная железа</span>
+		<span class="edit-servey-type-choice button" data="transcranial" onclick="window.edit_servey.toggleType('transcranial', this)">Транскраниальное узи</span>
+		<span class="edit-servey-type-choice button" data="echocardiography" onclick="window.edit_servey.toggleType('echocardiography', this)">Эхокардиография</span>
+	</div>
+
+	<div class="edit-servey-type-field-upper_arteries"></div>
+	<div class="edit-servey-type-field-lower_arteries"></div>
+	<div class="edit-servey-type-field-abdominal_aorta"></div>
+	<div class="edit-servey-type-field-lower_venous"></div>
+	<div class="edit-servey-type-field-head_arteries"></div>
+	<div class="edit-servey-type-field-breast"></div>
+	<div class="edit-servey-type-field-bladder"></div>
+	<div class="edit-servey-type-field-adrenal"></div>
+	<div class="edit-servey-type-field-parathyroid"></div>
+	<div class="edit-servey-type-field-abdomen"></div>
+	<div class="edit-servey-type-field-pelvic"></div>
+	<div class="edit-servey-type-field-scrotum"></div>
+	<div class="edit-servey-type-field-spleen"></div>
+	<div class="edit-servey-type-field-kidneys"></div>
+	<div class="edit-servey-type-field-renal_artery"></div>
+	<div class="edit-servey-type-field-prostate"></div>
+	<div class="edit-servey-type-field-salivary_glands"></div>
+	<div class="edit-servey-type-field-thyroid_gland"></div>
+	<div class="edit-servey-type-field-transcranial"></div>
+	<div class="edit-servey-type-field-echocardiography"></div>
+
+	<div class="edit-servey_field">
+		<span class="edit-servey_label"><%=_T("Dynamic")%></span>
+		<input class="edit-servey_input" type="date" name="dynamic" value="<%=servey.dynamic%>" />
+	</div>
+
+	<div class="edit-servey_field">
+		<center>
+			<select class="edit-servey-report">
+				<option>Выберите заключение</option>
+			</select>
+			<div>
+				<span>Заключение</span>
+			</div>
+			<textarea class="edit-servey-report-text" cols="70" rows="5" />
+		</center>
+	</div>
+
+	<div class="edit-servey_button" onclick="window.menu.clearWorkspace()">
+		<span class="edit-servey_button_label button"><%=_T("Cancel")%></span>
+	</div>
+	<div class="edit-servey_button" onclick="window.edit_servey.createReport()">
+		<span class="edit-servey_button_label button"><%=_T("Create")%></span>
+	</div>
+
+</div>

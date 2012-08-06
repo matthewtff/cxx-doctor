@@ -1,0 +1,45 @@
+.settings {
+	margin-left: 20%;
+	margin-right: 20%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	float: left;
+	width: 80%;
+}
+
+.settings-field {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	float: left;
+	width: 100%;
+}
+
+.settings-field:hover {
+	background-color: #efefef;
+}
+
+.settings-field-label {
+	padding-left: 1%;
+	font-size: 20px;
+	float: left;
+	width: 40%;
+}
+
+.settings-field-input {
+	padding-right: 1%;
+	float: right;
+	width: 58%;
+}
+
+.settings-button {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	float: left;
+	width: 50%;
+	font-size: 20px;
+	text-align: center;
+}
+
+.settings-button:hover {
+	background-color: #efefef;
+}

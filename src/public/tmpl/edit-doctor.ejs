@@ -1,0 +1,36 @@
+<div class="edit-doctor">
+	<div class="edit-doctor-field">
+		<span class="edit-doctor-label"><%= _T("Login") %></span>
+		<input class="edit-doctor-input" name="login" />
+	</div>
+	<div class="edit-doctor-field">
+		<span class="edit-doctor-label"><%= _T("Surname") %></span>
+		<input class="edit-doctor-input" name="surname" />
+	</div>
+	<div class="edit-doctor-field">
+		<span class="edit-doctor-label"><%= _T("Name") %></span>
+		<input class="edit-doctor-input" name="name" />
+	</div>
+	<div class="edit-doctor-field">
+		<span class="edit-doctor-label"><%= _T("Second name") %></span>
+		<input class="edit-doctor-input" name="second_name" />
+	</div>
+	<div class="edit-doctor-field">
+		<span class="edit-doctor-label"><%= _T("Category") %></span>
+		<input class="edit-doctor-input" name="category" />
+	</div>
+	<div class="edit-doctor-field">
+		<span class="edit-doctor-label"><%= _T("Password") %></span>
+		<input type="password" class="edit-doctor-input" name="password" />
+	</div>
+	<div class="edit-doctor-field">
+		<span class="edit-doctor-label"><%= _T("Confirm password") %></span>
+		<input type="password" class="edit-doctor-input" name="password_confirm" />
+	</div>
+	<div class="edit-doctor-button button" onclick="window.menu.clearWorkspace()">
+		<span><%= _T("Cancel") %></span>
+	</div>
+	<div class="edit-doctor-button button" onclick="window.edit_doctor.register()">
+		<span><%= _T("Create") %></span>
+	</div>
+</div>

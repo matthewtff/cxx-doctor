@@ -1,0 +1,9 @@
+.disease-serach-list_item {
+	float: left;
+	width: 95%;
+	padding-left: 5%;
+}
+
+.disease-serach-list_item:hover {
+	background-color: #efefef;
+}

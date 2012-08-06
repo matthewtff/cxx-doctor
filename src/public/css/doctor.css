@@ -1,0 +1,70 @@
+@import url("popup.css");
+@import url("settings.css");
+@import url("edit-servey.css");
+@import url("edit-patient.css");
+@import url("all-patients.css");
+@import url("edit-doctor.css");
+@import url("patient-search-list.css");
+@import url("disease-search-list.css");
+
+/**
+ * Главный файл стилей приложения. Именно он и только он указывается на странице приложения.
+ * Остальные файлы стилей должны включаться только из этого файла.
+ */
+
+body {
+	margin: 0px;
+	padding: 0px;
+}
+
+.top-panel {
+	float: left;
+	background-color: #e3e2e7;
+	width: 100%;
+	text-align: center;
+}
+
+.main-menu {
+	float: left;
+	width: 20%;
+	border-right: black 1px solid;
+}
+
+.main-menu_entry {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	text-align: center;
+	font-size: 20px;
+}
+
+.main-menu_entry:hover {
+	background-color: #efefef;
+
+}
+
+.main-menu_entry-active {
+	border-left: #96949d 15px solid;
+}
+
+.main-menu_separator {
+	height: 40px;
+}
+
+.workspace {
+	margin-top: 25px;
+	margin-left: 5%;
+	margin-right: 5%;
+	float: left;
+	width: 69%;
+}
+
+.button {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: pointer;
+	cursor: hand;
+}

@@ -1,0 +1,87 @@
+@import url("edit-servey-type.css");
+
+.edit-servey {
+	margin-left: 5%;
+	margin-right: 5%;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	float: left;
+	width: 90%;
+}
+
+.edit-servey_field {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	float: left;
+	width: 100%;
+}
+
+.edit-servey_field:hover {
+	background-color: #efefef;
+}
+
+.edit-servey_label {
+	margin-left: 2%;
+	float: left;
+	width: 31%;
+	font-size: 20px;
+}
+
+.edit-servey_input {
+	float: left;
+	width: 33%;
+}
+
+.edit-servey_create-patient_button {
+	margin-left: 1%;
+	margin-right: 2%;
+	float: right;
+	width: 30%;
+	font-size: 20px;
+	text-align: center;
+	background-color: lightblue;
+	border-radius: 6px;
+}
+
+.edit-servey_patient-list {
+	float: left;
+	width: 100%;
+}
+
+.edit-servey_button {
+	margin-top: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	float: left;
+	width: 50%;
+}
+
+.edit-servey_button:hover {
+	background-color: #efefef;
+}
+
+.edit-servey_button_label {
+	float: left;
+	width: 100%;
+	font-size: 20px;
+	text-align: center;
+}
+
+.edit-servey_diagnosis-list {
+	float:left;
+	width: 100%;
+}
+
+.edit-servey-section {
+	margin-left: 2%;
+	margin-right: 2%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 2%;
+	float: left;
+	width: 94%;
+}
+
+.edit-servey-section:hover {
+	background-color: #efefef;
+}

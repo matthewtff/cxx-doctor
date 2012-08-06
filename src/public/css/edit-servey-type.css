@@ -1,0 +1,65 @@
+.edit-servey-type-choice {
+	margin: 5px;
+	padding: 5px;
+	float: right;
+	/*width: 50%;*/
+	border-radius: 6px;
+	background-color: lightgray;
+}
+
+.edit-servey-type-choice:hover {
+	background-color: #f3b5ec;
+}
+
+.edit-servey-type-choice-active {
+	background-color: pink;
+}
+
+.edit-servey-type-field-abdomen {
+
+
+	display: none;
+}
+
+.edit-servey-type-field-upper_arteries {
+
+
+	display: none;
+}
+
+.edit-servey-type-section {
+	margin-left: 5%;
+	margin-right: 5%;
+	float: left;
+	width: 90%;
+}
+
+.edit-servey-type-section-label {
+	margin-top: 25px;
+	margin-left: 1%;
+	margin-right: 1%;
+	padding-left: 1%;
+	float: left;
+	width: 97%;
+}
+
+.edit-servey-type-subsection-label {
+	margin-top: 25px;
+	margin-left: 1%;
+	margin-right: 1%;
+	padding-left: 1%;
+	float: left;
+	width: 97%;
+}
+
+.edit-servey-type-subsection-label:hover {
+	background-color: #f3b5ec;
+}
+
+.edit-servey-type-subsection {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	float: left;
+	width: 100%;
+	border: 1px black dashed;
+}

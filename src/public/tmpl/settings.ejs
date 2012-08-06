@@ -1,0 +1,62 @@
+<%
+	var settings = window.utils.syncAjax("/settings/get");
+%>
+
+<script>
+
+	function saveSettings (settings) {
+		$.get("/settings/set?settings=" + JSON.stringify(settings));
+	}
+
+	function onLanguageChange (lang) {
+		if (lang == "none")
+			return;
+		var settings = window.utils.syncAjax("/settings/get");
+		settings.lang = lang;
+		settings.empty = false;
+		saveSettings(settings);
+		window.gettext.setLanguage(lang);
+	}
+
+	function onSaveClicked () {
+		var settings = window.utils.syncAjax("/settings/get");
+		settings["health facility"] = $("#settings-health-facility").val();
+		settings.empty = false;
+		saveSettings(settings);
+		window.menu.clearWorkspace();
+	}
+</script>
+
+<div>
+	<h1><%= _T("Settings")%></h1>
+</div>
+
+<div class="settings">
+	<div class="settings-field">
+		<span class="settings-field-label"><%=_T("Language")%></span>
+		<select class="settings-field-input" onchange="onLanguageChange(this.options[this.selectedIndex].value)" >
+			<option value="en" <%= settings.lang == "en" ? "selected" : "" %> ><%=_T("English")%></option>
+			<option value="ru" <%= settings.lang == "ru" ? "selected" : "" %> ><%=_T("Russian")%></option>
+		</select>
+	</div>
+	<div class="settings-field">
+		<span class="settings-field-label"><%=_T("Health facility")%></span>
+		<%
+			if (settings["health facility"]) {
+		%>
+			<input class="settings-field-input" style="width: 56%;" id="settings-health-facility" value="<%= settings['health facility'] %>" />
+		<%
+			} else {
+		%>
+			<input class="settings-field-input" style="width: 56%;" id="settings-health-facility" />
+		<%
+			}
+		%>
+	</div>
+	<div class="settings-button button" onclick="window.menu.clearWorkspace()">
+		<span><%=_T("Cancel")%></span>
+	</div>
+	<div class="settings-button button" onclick="onSaveClicked()">
+		<span><%=_T("Save")%></span>
+	</div>
+</div>

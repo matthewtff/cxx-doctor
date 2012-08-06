@@ -1,0 +1,92 @@
+<script>
+	function onInsuranceChange (insurance_value) {
+		if (insurance_value == "nothing-selected")
+			$("#edit-patient-insurance-manual").slideDown();
+		else
+			$("#edit-patient-insurance-manual").slideUp();
+	}
+</script>
+
+<%
+	var insurance_companies = window.utils.syncAjax("/insurance/all").insurances;
+	patient.male_checked = patient.sex == 'male' ? 'checked' : '';
+	patient.female_checked = patient.sex == 'female' ? 'checked' : '';
+%>
+
+<div class="edit-patient">
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Surname")%></span>
+		<input class="edit-patient_input" name="surname" value="<%=patient.surname%>" />
+	</div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Name")%></span>
+		<input class="edit-patient_input" name="name" value="<%=patient.name%>" />
+	</div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Second name")%></span>
+		<input class="edit-patient_input" name="second_name" value="<%=patient.second_name%>" />
+	</div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Birth date")%></span>
+		<input type="date" class="edit-patient_input" name="date" value="<%=patient.date%>" />
+	</div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Sex")%></span>
+		<select class="edit-patient_input" name="sex">
+			<option value="male" <%= patient.sex == 'male' ? "selected" : "" %> > <%=_T("Male")%></option>
+			<option value="female" <%= patient.sex == 'female' ? "selected" : "" %> > <%=_T("Female")%></option>
+		</select>
+	</div>
+	<div style="clear:both;"></div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Address")%></span>
+		<input class="edit-patient_input" name="address" value="<%=patient.address%>" />
+	</div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Insurance")%></span>
+		<select class="edit-patient_input" name="insurance" onchange="onInsuranceChange(this.options[this.selectedIndex].value)">
+			<option value="nothing-selected"><%=_T("Select insurance company")%></option>
+			<%
+				for (var counter = 0; counter < insurance_companies.length; ++counter) {
+					var insurance = insurance_companies[counter];
+
+			%>
+				<option value="<%= insurance %>" <%= insurance == patient.insurance ? "selected" : "" %> ><%=insurance%></option>
+			<%
+				}
+			%>
+		</select>
+	</div>
+	<div <%= patient.insurance ? 'style="display: none;"' : '' %> class="edit-patient_field" id="edit-patient-insurance-manual">
+		<span class="edit-patient_label"><%=_T("Enter manualy")%></span>
+		<input class="edit-patient_input" name="insurance_manual" value="<%=patient.insurance_manual%>" />
+	</div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Insurance number")%></span>
+		<input class="edit-patient_input" name="insurance_number" value="<%=patient.insurance_number%>" />
+	</div>
+	<div class="edit-patient_field">
+		<span class="edit-patient_label"><%=_T("Card number")%></span>
+		<input class="edit-patient_input" name="card" value="<%=patient.card%>" />
+	</div>
+	<input class="edit-patient_input" name="id" value="<%=patient.id%>" type="hidden" />
+	<div class="edit-patient_button button" onclick="window.edit_patient.register()">
+<%
+	if (patient.id) {
+%>
+			<span class="edit-patient_button_text"><%=_T("Save")%></span>
+	</div>
+	<div class="edit-patient_button button" onclick="window.edit_patient.del('<%=patient.id%>')">
+		<span class="edit-patient_button_text"><%=_T("Delete")%></span>
+	</div>
+<%
+	} else {
+%>
+			<span class="edit-patient_button_text"><%=_T("Create")%></span>
+	</div>
+<%	}	%>
+	<div class="edit-patient_button button" onclick="window.menu.clearWorkspace()">
+		<span class="edit-patient_button_text"><%=_T("Cancel")%></span>
+	</div>
+	<div style="clear:both;" />
+</div>

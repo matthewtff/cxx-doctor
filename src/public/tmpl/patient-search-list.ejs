@@ -1,0 +1,22 @@
+<%
+if (inmates.length) {
+
+	inmates.forEach(function(inmate) {
+		var str = inmate.surname + ' ' + inmate.name + ' ' + inmate.second_name;
+%>
+
+		<div class="patient-serach-list_item" onclick="window.edit_servey.loadServeyByPatient('<%=inmate.id%>');">
+			<span><%=str%></span>
+		</div>
+
+<%
+	});
+
+} else {
+%>
+
+	<div class="patient-serach-list_item">
+		<span><%=_T("No patients found")%></span>
+	</div>
+
+<% } %>

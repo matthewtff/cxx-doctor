@@ -1,0 +1,170 @@
+<div>
+
+	<%
+
+		var acoustic_access = {
+			"satisfactory" : "удавлетворительный",
+			"difficult" : "затруднён ",
+			"unaccessable" : "невозможен ",
+			reasons : {
+				"increased-pneumatization" : "из-за повышеной пневматизации петель кишечника",
+				"developed-fat-layer" : "из-за развитого подкожно-жирового слоя",
+				"content-in-stomach" : "из-за наличия содержимого в желудке и двенадцатиперстной кишке (исследование проводится после еды)"
+			}
+		};
+		var acoustic_access_result = "Акустический доступ " + acoustic_access[this["abdomen-acoustic_access"]];
+		if (this["abdomen-acoustic_access"] != "satisfactory")
+			acoustic_access_result += " " + acoustic_access.reasons[this["abdomen-acoustic_access-reason"]];
+
+		var location = {
+			"right-upper-quadrant" : "в правом подреберье",
+			"omitted" : "опущена",
+			"rotated" : "ротирована"
+		};
+		var location_result = "Расположение - " + location[this["abdomen-location"]];
+
+		var form = {
+			"whithin-anatomical-configuration" : "в пределах анатомической группы",
+			"deformed" : "деформирована",
+			"incremental-share-of-Riedel" : "определяется добавочная доля"
+		};
+		var form_result = "Форма " + form[this["abdomen-form"]];
+
+		var contour = {
+			"smooth" : "ровный, чётко очерченный",
+			"uneven" : "неровный, бугристый"
+		};
+		var contour_result = "Контур " + contour[this["abdomen-contour"]];
+
+		var lower_edge = {
+			"acute" : "острый",
+			"rounded" : "закруглён"
+		};
+		var lower_edge_result = "Нижний край " + lower_edge[this["abdomen-lower_edge"]];
+
+		var dimentions = {
+			"not-reduced" : "не уменьшены",
+			"reduced" : "уменьшены",
+			"enlarged" : "увеличены"
+		};
+		var dimentions_result = "Размеры " + dimentions[this["abdomen-dimensions"]];
+
+		var parenchyma_structure = {
+			"homogeneous" : "однородная",
+			"inhomogeneous" : "неоднородная",
+			homo_info : {
+				"fine-grained" : "мелкозернистая",
+				"coarse" : "крупнозернистая"
+			},
+			inhomo_info : {
+				"diffysely" : "диффузно",
+				"focal" : {
+					"microfocal" : "мелкоочагово",
+					"macrofocal" : "крупноочагово"
+				}
+			}
+		};
+		var parenchyma_structure_result = "Структура паренхемы ";
+
+		if (this["abdomen-parenchyma-structure"] == "homogeneous")
+			parenchyma_structure_result += "однородная " + parenchyma_structure.homo_info[this["abdomen-perenchyma-structure-homogeneous"]];
+		else {
+			if (this["abdomen-perenchyma-structure-inhomogeneous"] == "diffysely")
+				parenchyma_structure_result += "диффузно неоднородная";
+			else {
+				parenchyma_structure_result += parenchyma_structure.inhomo_info["focal"][this["abdomen-perenchyma-structure-inhomogeneous-focal"]];
+				parenchyma_structure_result += " неоднородная";
+			}
+		}
+
+		var echogenicity = {
+			"not-altered_kidney" : "сопоставима с эхогенностью коркового вещества неизменённой почки",
+			"increased" : "повышена",
+			"reduced" : "понижена",
+			"mixed" : "смешанная",
+			increased_or_reduced : {
+				"evenly" : "равномерно",
+				"irregularly" : "неравномерно"
+			},
+			increased_info : {
+				"insignificantly" : "незначительно",
+				"moderately" : "умеренно",
+				"significantly" : "значительно, с выраженным затуханием в глубоких отделах"
+			},
+			reduced_info : {
+				"moderately" : "умеренно",
+				"significantly" : "значительно"
+			}
+		};
+		var echo_val = this["abdomen-echogenicity"];
+		var echogenicity_result = "Эхогенность ";
+		if (echo_val == "not-altered_kidney" || echo_val == "mixed")
+			echogenicity_result += echogenicity[echo_val];
+		else {
+			echogenicity_result += echogenicity[echo_val] + " ";
+			if (echo_val == "increased")
+				echogenicity_result += echogenicity.increased_info[this["abdomen-echogenicity-increased"]];
+			else
+				echogenicity_result += echogenicity.reduced_info[this["abdomen-echogenicity-reduced"]];
+			echogenicity_result += " " + echogenicity.increased_or_reduced[this["abdomen-echogenicity-increased-or-reduced"]];
+		}
+
+		var sound_conduction = {
+			"normal" : "обычная",
+			"reduced" : "снижена"
+		};
+		var sound_conduction_result = "Звукопроводимость " + sound_conduction[this["abdomen-sound-conduction"]];
+
+		var vascular_pattern = {
+			"not-changed" : "не изменён",
+			"enriched" : "обогащён",
+			"depleted" : "обеднён",
+			"deformed" : "деформирован"
+		};
+		var vascular_pattern_result = "Сосудистый рисунок " + vascular_pattern[this["abdomen-vascular-pattern"]];
+
+		var vena_porta = {
+			"not-expanded" : "не расширена",
+			"expanded" : "расширена"
+		};
+		var vena_porta_result = "Воротная вена " + this["abdomen-vena-porta-size"] + " мм (норма до 12-14 мм) " + vena_porta[this["abdomen-vena-porta-status"]];
+
+		var bulk_formations_result = "Объёмные образования ";
+		if (this["abdomen-bulk-formations"] == "not-detected")
+			bulk_formations_result += "не выявлены";
+		else {
+			bulk_formations_result += "выявлены. " + this["abdomen-bulk-formations-description"];
+		}
+
+		var intrahepatic_bile_ducts_expanded = {
+			"greatly" : "значительно",
+			"right-lobe" : "в правой доле",
+			"left-lobe" : "в левой доле",
+			"both-lobes" : "в обеих долях"
+		};
+		var intrahepatic_bile_ducts_result = "Внутрипечёночные желчные протоки ";
+		if (this["abdomen-intrahepatic-bile-ducts"] == "not-expanded")
+			intrahepatic_bile_ducts_result += "не расширены";
+		else
+			intrahepatic_bile_ducts_result += "расширены " + intrahepatic_bile_ducts_expanded[this["abdomen-intrahepatic-bile-ducts-expanded"]];
+	%>
+
+	<p contenteditable="true"><%= acoustic_access_result%>.</p>
+
+	<p contenteditable="true">Печень:</p>
+
+	<p contenteditable="true"><%= location_result %>. <%= form_result %>. <%= contour_result %>. <%= lower_edge_result %>. <%= dimentions_result %>.
+		Косой вертикальный размер правой доли <%= this["abdomen-vertical-size-right-lobe"] %> мм. Толщина правой доли по средне-ключичной линии
+		<%= this["abdomen-thickness-right-lobe"] %> мм. Кранио-каудальный размер левой доли <%= this["abdomen-craniocaudal-size-left-lobe"] %> мм.
+		Толщина левой доли <%= this["abdomen-thickness-left-lobe"] %> мм. <%= parenchyma_structure_result %>. <%= echogenicity_result %>.
+		<%= sound_conduction_result %>. <%= vascular_pattern_result %>. <%= vena_porta_result %>. <%= bulk_formations_result %>.
+		<%= intrahepatic_bile_ducts_result %>.</p>
+
+
+	<%
+
+
+	<p contenteditable="true"></p>
+	<p contenteditable="true"></p>
+	<p contenteditable="true"></p>
+</div>
