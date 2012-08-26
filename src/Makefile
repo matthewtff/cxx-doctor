@@ -2,7 +2,7 @@
 CC=clang++
 WARNINGS=-Wall -Wextra -Wold-style-cast -Woverloaded-virtual
 #CFLAGS=-c -std=c++0x -stdlib=libc++ -g -ggdb -D_DEBUG
-CFLAGS=-c -std=c++0x -O2 -stdlib=libc++
+CFLAGS=-c -std=c++0x -O3 -stdlib=libc++ -g
 INC=-I../external/inc
 KOOHARLIB=koohar
 OODBLIB=oodb
@@ -19,7 +19,8 @@ OBJECTS=$(SOURCES:.cc=.o)
 all: doctor
 
 doctor: $(OBJECTS)
-	$(CC) -g -ggdb -stdlib=libc++ $(WARNINGS) *.o -o doctor $(LIB)
+#	$(CC) -g -ggdb -stdlib=libc++ $(WARNINGS) *.o -o doctor $(LIB)
+	$(CC) -g -O3 -stdlib=libc++ $(WARNINGS) *.o -o doctor $(LIB)
 
 .cc.o:
 	$(CC) $(WARNINGS) $(CFLAGS) $(INC) $< -o $@
@@ -27,7 +28,7 @@ doctor: $(OBJECTS)
 rebuild: clean all
 
 relink:
-	$(CC) -g -ggdb $(WARNINGS) *.o -o doctor $(LIB)
+	$(CC) -g -ggdb -stdlib=libc++ $(WARNINGS) *.o -o doctor $(LIB)
 
 
 clean:

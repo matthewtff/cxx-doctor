@@ -1,3 +1,4 @@
+@import url("top-panel.css");
 @import url("popup.css");
 @import url("settings.css");
 @import url("edit-servey.css");
@@ -27,7 +28,7 @@ body {
 .main-menu {
 	float: left;
 	width: 20%;
-	border-right: black 1px solid;
+	border-right: #efefef 3px solid;
 }
 
 .main-menu_entry {
@@ -67,4 +68,8 @@ body {
 	user-select: none;
 	cursor: pointer;
 	cursor: hand;
+}
+
+.button:hover {
+	background-color: #efefef;
 }

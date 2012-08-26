@@ -6,8 +6,9 @@ define (['jquery', 'ejs'], function ($, ejs) {
 		loadTemplate : function (template_url, selector, url_or_data) {
 			if (typeof url_or_data == "string") {
 				$.get(url_or_data, function (data) {
-					utils.loadTemplate("/tmpl/all-patients.ejs",
-						".workspace", data);
+					/*utils.loadTemplate("/tmpl/all-patients.ejs",
+						".workspace", data);*/
+					utils.loadTemplate(template_url, selector, data);
 				});
 			} else {
 				$(selector).hide();

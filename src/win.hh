@@ -21,7 +21,9 @@ typedef void HandlerRet;
 typedef int HandlerGet;
 
 enum {
-	CTRL_C_EVENT = SIGINT
+	CTRL_C_EVENT = SIGINT,
+	QUIT_EVENT = SIGQUIT,
+	TERM_EVENT = SIGTERM
 };
 
 void setHandler(int Sig, HandlerRet(* Routine)(HandlerGet))

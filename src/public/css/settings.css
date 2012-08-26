@@ -1,6 +1,6 @@
 .settings {
-	margin-left: 20%;
-	margin-right: 20%;
+	margin-left: 10%;
+	margin-right: 10%;
 	padding-top: 20px;
 	padding-bottom: 20px;
 	float: left;
@@ -38,8 +38,4 @@
 	width: 50%;
 	font-size: 20px;
 	text-align: center;
-}
-
-.settings-button:hover {
-	background-color: #efefef;
 }

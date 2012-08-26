@@ -40,10 +40,6 @@
 	text-align: center;
 }
 
-.all-patients_button:hover {
-	background-color: #efefef;
-}
-
 .all-patients_button_text {
 	font-size: 24px;
 }

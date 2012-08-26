@@ -19,6 +19,13 @@ require([
 	],
 function ($, ejs, utils, panel, menu, gettext, edit_servey, edit_patient, all_patients, edit_doctor) {
 
+	var doctor = {
+		save : function () {
+			$.get("/save");
+		}
+	}
+
+	window.doctor = doctor;
 	window.$ = $;
 	window.ejs = ejs;
 	window.utils = utils;
