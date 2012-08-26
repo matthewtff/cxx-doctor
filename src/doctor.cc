@@ -17,28 +17,24 @@
 #include "settings.hh"
 #include "disease.hh"
 
-#include <cstdio>
+#include <fstream>
 
 using namespace doctor;
 
 static std::string views_dir("./views/");
 static std::string db_name("doctordb.dat");
-//static oodb::Db db(db_name);
-static oodb::Db* db = 0;
+static oodb::Db db = oodb::Db(db_name);
 
 void AddMKBToDb(oodb::Db& db);
 
 class Doctor {
 public:
-	Doctor (const std::string& database_name) : m_db(database_name)
-	{
-		db = &m_db;
-	}
+	Doctor (oodb::Db& database) : m_db(database) {}
 
 	void processRequest (koohar::Request& Req, koohar::Response& Res);
 
 private:
-	oodb::Db m_db;
+	oodb::Db& m_db;
 }; // class Doctor;
 
 void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
@@ -51,7 +47,9 @@ void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
 		Res.header("Content-Type", "text/plain");
 		Res.end(msg);
 	} else if (Req.contains("/save")) { // save changes
+		std::cout << "\tSaving data..." << std::endl;
 		m_db.save();
+		std::cout << "\tData successfully saved!" << std::endl;
 	} else if (Req.contains("/register")) {
 		Register(Req, Res, m_db);
 	} else if (Req.contains("/visit")) {
@@ -73,20 +71,21 @@ void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
 
 HandlerRet sigHandler (HandlerGet sig)
 {
-	if (sig == CTRL_C_EVENT) {
-		if (db) {
-			std::cout << "\tSaving database..." << std::endl;
-			db->save();
-			std::cout << "\tDatabase saved!" << std::endl;
-		}
-		std::cout << "\tExiting...\n";
+	if (sig == CTRL_C_EVENT || sig == QUIT_EVENT || sig == TERM_EVENT) {
+		db.save();
 		exit(0);
 	}
+#ifdef _WIN32
+	else return 0;
+#endif /* _WIN32 */
 }
 
 int main (int argc, char* argv[])
 {
 	setHandler(CTRL_C_EVENT, sigHandler);
+	setHandler(QUIT_EVENT, sigHandler);
+	setHandler(TERM_EVENT, sigHandler);
+
 	std::string host = "localhost";
 	unsigned short port = 7000;
 	if (argc > 1)
@@ -94,7 +93,7 @@ int main (int argc, char* argv[])
 	if (argc > 2)
 		port = static_cast<unsigned short>(atoi(argv[2]));
 
-	Doctor doc(db_name);
+	Doctor doc(db);
 	auto callback = std::bind(&Doctor::processRequest, doc,
 		std::placeholders::_1, std::placeholders::_2);
 	koohar::App<decltype(callback)> app(host, port, 2);
@@ -119,33 +118,24 @@ void delReturnes(std::string& str)
 
 void AddMKBToDb(oodb::Db& db)
 {
-	char *key = NULL, *value = 0;
-	size_t size_key = 0, size_value = 0;
-	ssize_t readed_key = 0, readed_value = 0;
+	std::string key, value;
 
-	FILE* mkb_file = fopen("./mkb", "r");
-	if (!mkb_file)
+	std::ifstream mkb_file("./mkb");
+	if (!mkb_file.is_open())
 		return;
 
-	while ((readed_key = getline(&key, &size_key, mkb_file)) > 0) {
-		readed_value = getline(&value, &size_value, mkb_file);
-		if (readed_value < 1) {
-			free(key); key = 0;
-			break;
-		}
+	std::getline(mkb_file, key);
+	std::getline(mkb_file, value);
 
-		std::string key_str(key);
-		std::string value_str(value);
+	while (!key.empty() && !value.empty()) {
 
-		delReturnes(key_str);
-		delReturnes(value_str);
+		delReturnes(key);
+		delReturnes(value);
 
-		db.addSet(Disease::m_prefix, key_str);
-		db.setString(Disease::m_prefix + ":" + key_str, value_str);
+		db.addSet(Disease::m_prefix, key);
+		db.setString(Disease::m_prefix + ":" + key, value);
 
-		free(key); key = 0;
-		free(value); value = 0;
+		std::getline(mkb_file, key);
+		std::getline(mkb_file, value);
 	}
-
-	fclose(mkb_file);
 }

@@ -8,6 +8,9 @@
 #define HandlerRet BOOL WINAPI
 typedef DWORD HandlerGet;
 
+static const DWORD QUIT_EVENT = CTRL_CLOSE_EVENT;
+static const DWORD TERM_EVENT = CTRL_SHUTDOWN_EVENT;
+
 void setHandler(int Add, PHANDLER_ROUTINE Routine)
 {
 	SetConsoleCtrlHandler(Routine, Add);

@@ -7,7 +7,7 @@ namespace doctor {
 
 std::string hash(const std::string& Message);
 
-std::string sha256(const std::string& Message);
+//std::string sha256(const std::string& Message);
 
 } // namespace doctor
 
