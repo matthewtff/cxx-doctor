@@ -27,6 +27,17 @@ static oodb::Db db = oodb::Db(db_name);
 
 void AddMKBToDb(oodb::Db& db);
 
+HandlerRet sigHandler (HandlerGet sig)
+{
+	if (sig == CTRL_C_EVENT || sig == QUIT_EVENT || sig == TERM_EVENT) {
+		db.save();
+		exit(0);
+	}
+#ifdef _WIN32
+	else return 0;
+#endif /* _WIN32 */
+}
+
 class Doctor {
 public:
 	Doctor (oodb::Db& database) : m_db(database) {}
@@ -46,10 +57,10 @@ void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
 		std::string msg = "success";
 		Res.header("Content-Type", "text/plain");
 		Res.end(msg);
+	} else if (Req.contains("/exit")) { // exiting application
+		sigHandler(QUIT_EVENT);
 	} else if (Req.contains("/save")) { // save changes
-		std::cout << "\tSaving data..." << std::endl;
 		m_db.save();
-		std::cout << "\tData successfully saved!" << std::endl;
 	} else if (Req.contains("/register")) {
 		Register(Req, Res, m_db);
 	} else if (Req.contains("/visit")) {
@@ -67,17 +78,6 @@ void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
 	} else {
 		koohar::WebPage(Req, Res, views_dir + "./index.html").render();
 	}
-}
-
-HandlerRet sigHandler (HandlerGet sig)
-{
-	if (sig == CTRL_C_EVENT || sig == QUIT_EVENT || sig == TERM_EVENT) {
-		db.save();
-		exit(0);
-	}
-#ifdef _WIN32
-	else return 0;
-#endif /* _WIN32 */
 }
 
 int main (int argc, char* argv[])
