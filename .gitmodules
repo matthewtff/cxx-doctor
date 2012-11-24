@@ -1,6 +1,0 @@
-[submodule "external/koohar"]
-	path = external/koohar
-	url = https://github.com/matthewtff/koohar.git
-[submodule "external/oodb"]
-	path = external/oodb
-	url = https://github.com/matthewtff/oodb.git
