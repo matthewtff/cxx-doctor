@@ -1,0 +1,132 @@
+<script>
+
+	function onMachineSelected (machine_header) {
+		var machine_info = $(".settings-machine-info");
+		var name_input = $(".settings-machine-info-name-input");
+		var sensors_input = $(".settings-machine-info-sensors-input");
+		var machine_name = $(machine_header).find(" .settings-machine-header-caption").attr("data-value");
+
+		$(".settings-machine-header").not(machine_header).removeClass("settings-machine-header-active");
+		if ($(machine_header).hasClass("settings-machine-header-active")) {
+			$(machine_header).removeClass("settings-machine-header-active");
+			machine_info.hide();
+			return;
+		}
+
+		$(machine_header).addClass("settings-machine-header-active");
+		if ((machine_name == "new-machine")) {
+			name_input.val("");
+			sensors_input.val("");
+		} else {
+			name_input.val(machine_name);
+			var machines = window.utils.syncAjax("/machine/all").machines;
+			machines.forEach(function (machine) {
+				if (machine.name == machine_name) {
+					sensors_input.val("");
+					machine.info.sensors.forEach(function (sensor) {
+						var val = sensors_input.val();
+						val += sensor + "\n";
+						sensors_input.val(val);
+					});
+				}
+			});
+			//sensors_input.val(machine.info.);
+		}
+		machine_info.show();
+	}
+
+	function getCurrentMachineInfo () {
+		var machine = {};
+		machine.name = $(".settings-machine-header-active .settings-machine-header-caption").attr("data-value");
+		machine.new_name = $(".settings-machine-info-name-input").val();
+		var sensors = $(".settings-machine-info-sensors-input").val();
+		console.log($.trim(sensors).split("\n"));
+		machine.info = {
+			sensors : $.trim(sensors).split("\n")
+		}
+		console.log(machine);
+		return machine;
+	}
+
+	function onMachineBlur () {
+		var machine = getCurrentMachineInfo();
+		if (machine.name == "new-machine") {
+			console.log(JSON.stringify(machine.info));
+			$.get("/machine/new/?name=" + machine.new_name + "&info=" + JSON.stringify(machine.info), function (result) {
+				if (result != "success") {
+					window.utils.showMessage(window._T(result), window._T('Error'));
+				} else {
+					$(".settings-machine-header").removeClass("settings-machine-header-active");
+					$(".settings-machines-headers").append("\
+						<div class=\"button settings-machine-header settings-machine-header-active\" onclick=\"onMachineSelected(this);\">\
+							<span class=\"settings-machine-header-caption\" data-value=\"" + machine.new_name + "\" >" + machine.new_name + "</span>\
+						</div>\
+					");
+				}
+			});
+		} else {
+			$.get("/machine/change/?prev_name=" + machine.name + "&name=" + machine.new_name + "&info=" + JSON.stringify(machine.info), function (result) {
+				if (result != "success") {
+					window.utils.showMessage(window._T(result), window._T('Error'));
+				} else {
+					$(".settings-machine-header-active .settings-machine-header-caption").attr("data-value", machine.new_name);
+					$(".settings-machine-header-active .settings-machine-header-caption").text(machine.new_name);
+				}
+			});
+		}
+	}
+
+	function removeMachine () {
+		var machine = getCurrentMachineInfo();
+		$.get("/machine/rem?name=" + machine.name, function (result) {
+			if (result != "success")
+				window.utils.showMessage(window._T(result), window._T('Error'));
+			else {
+				window.utils.showMessage(window._T('Machine removed successfully!'), window._T('Success'));
+				$(".settings-machine-header-active").remove();
+				$(".settings-machine-info").hide();
+			}
+		});
+	}
+
+</script>
+
+<%
+	var machines = window.utils.syncAjax("/machine/all").machines;
+%>
+
+	<div class="settings-machines">
+		<span class="settings-machines-caption"><%=_T("Ultrasound machines")%></span>
+
+		<div class="settings-machines-headers">
+			<div class="button settings-machine-header" onclick="onMachineSelected(this);">
+				<span class="settings-machine-header-caption" data-value="new-machine" ><%=_T("New")%></span>
+			</div>
+
+<%
+	machines.forEach(function(machine) {
+%>
+
+			<div class="button settings-machine-header" onclick="onMachineSelected(this);">
+				<span class="settings-machine-header-caption" data-value="<%=machine.name%>" ><%=machine.name%></span>
+			</div>
+
+<%
+	})
+%>
+		</div>
+		<div class="settings-machine-info">
+			<div class="settings-machine-info-section">
+				<span class="settings-machine-info-name-label"><%=_T("Name")%></span>
+				<input class="settings-machine-info-name-input" onblur="onMachineBlur();" />
+			</div>
+			<div class="settings-machine-info-section">
+				<span class="settings-machine-info-sensors-label"><%=_T("Sensors")%></span>
+				<textarea rows="5" class="settings-machine-info-sensors-input" onblur="onMachineBlur();" />
+			</div>
+			<div class="button settings-machine-info-remove" onclick="removeMachine();" >
+				<span class=""><%=_T("Delete")%></span>
+			</div>
+		</div>
+
+	</div><!-- .settings-machines -->
