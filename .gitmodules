@@ -1,0 +1,6 @@
+[submodule "external/koohar"]
+	path = external/koohar
+	url = git@github.com:matthewtff/koohar.git
+[submodule "external/oodb"]
+	path = external/oodb
+	url = git@github.com:matthewtff/oodb.git
