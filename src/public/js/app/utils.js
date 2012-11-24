@@ -26,11 +26,11 @@ define (['jquery', 'ejs'], function ($, ejs) {
 		showMessage : function (text, caption) {
 			$(".popup-window-text").text(text);
 			$(".popup-window-title").text(caption ? caption : _T("Message"));
-			$(popup_selector).slideDown();
-			setTimeout(this.hideMessage, 1000);
+			$(popup_selector).fadeToggle('slow');
+			setTimeout(this.hideMessage, 2000);
 		},
 		hideMessage : function () {
-			$(popup_selector).slideUp();
+			$(popup_selector).fadeToggle('fast');
 		},
 		syncAjax : function (url) {
 			var ret;

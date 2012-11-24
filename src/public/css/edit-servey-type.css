@@ -2,13 +2,12 @@
 	margin: 5px;
 	padding: 5px;
 	float: right;
-	/*width: 50%;*/
 	border-radius: 6px;
 	background-color: lightgray;
 }
 
 .edit-servey-type-choice:hover {
-	background-color: #f3b5ec;
+	background-color: #f3b5ec !important;
 }
 
 .edit-servey-type-choice-active {

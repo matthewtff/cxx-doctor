@@ -18,6 +18,17 @@
 
 
 	<%
+		// Выводим название отделения
+		if (settings["department"]) {
+	%>
+
+	<h4 contenteditable="true" class="servey-report-health-facility"><%= settings["department"] %></h4>
+
+	<%
+		}
+	%>
+
+	<%
 		// Выводим информацию о пациенте.
 		if (servey.patient_id) {
 			var patient = window.utils.syncAjax("/inmate/get?id=" + servey.patient_id).inmates[0];

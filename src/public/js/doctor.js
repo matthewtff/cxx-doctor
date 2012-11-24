@@ -22,6 +22,9 @@ function ($, ejs, utils, panel, menu, gettext, edit_servey, edit_patient, all_pa
 	var doctor = {
 		save : function () {
 			$.get("/save");
+		},
+		exit : function () {
+			$.get("/exit");
 		}
 	}
 

@@ -3,8 +3,8 @@
 #include <cstdlib>
 #include <string>
 
-#include <koohar/app.hh>
 #include <koohar/webpage.hh>
+#include <koohar/server_asio.hh>
 
 #include <oodb/oodb.hh>
 
@@ -18,6 +18,7 @@
 #include "disease.hh"
 
 #include <fstream>
+
 
 using namespace doctor;
 
@@ -61,6 +62,8 @@ void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
 		sigHandler(QUIT_EVENT);
 	} else if (Req.contains("/save")) { // save changes
 		m_db.save();
+		Res.writeHead(200);
+		Res.end();
 	} else if (Req.contains("/register")) {
 		Register(Req, Res, m_db);
 	} else if (Req.contains("/visit")) {
@@ -86,6 +89,8 @@ int main (int argc, char* argv[])
 	setHandler(QUIT_EVENT, sigHandler);
 	setHandler(TERM_EVENT, sigHandler);
 
+	koohar::ServerAsio some_serv(8000);
+
 	std::string host = "localhost";
 	unsigned short port = 7000;
 	if (argc > 1)
@@ -94,19 +99,19 @@ int main (int argc, char* argv[])
 		port = static_cast<unsigned short>(atoi(argv[2]));
 
 	Doctor doc(db);
-	auto callback = std::bind(&Doctor::processRequest, doc,
-		std::placeholders::_1, std::placeholders::_2);
-	koohar::App<decltype(callback)> app(host, port, 2);
-	app.config("static_dir", "public");
-	app.config("static", "/html");
-	app.config("static", "/music");
-	app.config("static", "/images");
-	app.config("static", "/js");
-	app.config("static", "/css");
-	app.config("static", "/tmpl");
-	app.config("static", "/lang");
+	koohar::ServerAsio server(port);
 
-	app.listen(callback);
+	server.config(koohar::ServerConfig::SET_STATIC_DIR, "./public");
+	server.config(koohar::ServerConfig::SET_STATIC_URL, "/html");
+	server.config(koohar::ServerConfig::SET_STATIC_URL, "/music");
+	server.config(koohar::ServerConfig::SET_STATIC_URL, "/images");
+	server.config(koohar::ServerConfig::SET_STATIC_URL, "/js");
+	server.config(koohar::ServerConfig::SET_STATIC_URL, "/css");
+	server.config(koohar::ServerConfig::SET_STATIC_URL, "/tmpl");
+	server.config(koohar::ServerConfig::SET_STATIC_URL, "/lang");
+
+	server.listen( std::bind(&Doctor::processRequest, doc,
+		std::placeholders::_1, std::placeholders::_2) );
 	return 0;
 }
 

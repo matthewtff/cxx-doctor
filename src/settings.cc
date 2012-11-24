@@ -48,10 +48,7 @@ void Settings::get ()
 {
 	stringstream send_data;
 	string settings = m_db.getString(m_prefix);
-	if (settings.empty())
-		send_data << "{\"empty\":\"true\"}";
-	else
-		send_data << settings;
+	send_data << (settings.empty() ? "{\"empty\":\"true\"}" : settings);
 
 	m_res.writeHead(200);
 	m_res.header("Content-Type", "application/json");

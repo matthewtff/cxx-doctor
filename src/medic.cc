@@ -40,7 +40,7 @@ bool Medic::reg (const string& login, const string& password,
 	if (login.empty() || password.empty() || name.empty()
 		|| surname.empty())
 	{
-		m_error = "Empty field.";
+		m_error = "Not enough data";
 		return false;
 	}
 	if (password != password_confirm) {

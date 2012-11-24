@@ -18,6 +18,10 @@ body {
 	padding: 0px;
 }
 
+textarea {
+	font-family: sans-serif;
+}
+
 .top-panel {
 	float: left;
 	background-color: #e3e2e7;

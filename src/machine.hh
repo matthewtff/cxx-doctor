@@ -16,6 +16,8 @@ private:
 	void load ();
 	void saveNew ();
 	void sendAll ();
+	void remove ();
+	void change ();
 
 private:
 	koohar::Request& m_req;

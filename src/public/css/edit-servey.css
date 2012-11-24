@@ -43,6 +43,10 @@
 	border-radius: 6px;
 }
 
+.edit-servey_create-patient_button:hover {
+	background-color: lightblue !important;
+}
+
 .edit-servey_patient-list {
 	float: left;
 	width: 100%;

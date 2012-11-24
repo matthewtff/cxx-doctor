@@ -13,7 +13,10 @@ Device::Device (Db& db) : m_db(db)
 bool Device::add (const string& name, const string& info)
 {
 	if (!(checkSecurity(name) && checkSecurity(info))) {
-		m_error = "Wrong data.";
+		m_error = "Wrong data";
+		return false;
+	} else if (m_db.checkSet(m_prefix, name)) {
+		m_error = "Device already exists";
 		return false;
 	}
 
@@ -25,10 +28,39 @@ bool Device::add (const string& name, const string& info)
 	return true;
 }
 
+bool Device::change (const std::string& previous_name, const std::string& name,
+	const std::string& info)
+{
+	if (previous_name.empty() || name.empty() || info.empty()) {
+		m_error = "Wrong data";
+		return false;
+	}
+	return remove(previous_name) && add(name, info);
+}
+
+
+bool Device::remove (const std::string& name)
+{
+	if (!(checkSecurity(name))) {
+		m_error = "Wrong data";
+		return false;
+	} else if (!m_db.checkSet(m_prefix, name)) {
+		m_error = "Device does not exist";
+		return false;
+	}
+
+	m_db.remSet(m_prefix, name);
+	string key = generateKey(name);
+	m_db.unsetString(key + ":info");
+
+	return true;
+}
+
+
 bool Device::load (const string& name)
 {
 	if (!m_db.checkSet(m_prefix, name)) {
-		m_error = "Device does not exist.";
+		m_error = "Device does not exist";
 		return false;
 	}
 	m_name = name;
@@ -59,7 +91,8 @@ void Device::all (oodb::Db& db, DeviceList& devices)
 
 bool Device::checkSecurity (const string& value)
 {
-	return !value.empty() && value.find(":") == value.npos;
+	// JSON contains ':', so do not check it.
+	return !value.empty();// && value.find(":") == value.npos;
 }
 
 } // namespace doctor

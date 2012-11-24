@@ -19,6 +19,11 @@ public:
 
 	bool add (const std::string& name, const std::string& info);
 
+	bool change (const std::string& previous_name, const std::string& name,
+		const std::string& info);
+
+	bool remove (const std::string& name);
+
 	bool load (const std::string& name);
 
 	static void all (oodb::Db& db, DeviceList& devices);

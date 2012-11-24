@@ -24,6 +24,10 @@ void Machine::load ()
 		saveNew();
 	else if (m_req.contains("all"))
 		sendAll();
+	else if (m_req.contains("rem"))
+		remove();
+	else if (m_req.contains("change"))
+		change();
 	else {
 		m_res.writeHead(200);
 		m_res.end();
@@ -51,7 +55,7 @@ void Machine::sendAll ()
 		if (it != all.begin())
 			send_data << ",";
 		send_data << "{\"name\":\"" << it->name() << "\",";
-		send_data << "\"info\":\"" << it->info() << "\"}";
+		send_data << "\"info\":" << it->info() << "}";
 	}
 
 	send_data << "]}";
@@ -59,6 +63,27 @@ void Machine::sendAll ()
 	m_res.writeHead(200);
 	m_res.header("Content-Type", "application/json");
 	m_res.end(send_data.str());
+}
+
+void Machine::remove ()
+{
+	Device device(m_db);
+	bool succ = device.remove(m_req.body("name"));
+
+	m_res.writeHead(200);
+	m_res.header("Content-Type", "text/plain");
+	m_res.end(succ ? "success" : device.error());
+}
+
+void Machine::change ()
+{
+	Device device(m_db);
+	bool succ = device.change(m_req.body("prev_name"), m_req.body("name"),
+		m_req.body("info"));
+	
+	m_res.writeHead(200);
+	m_res.header("Content-Type", "text/plain");
+	m_res.end(succ ? "success" : device.error());
 }
 
 } // namespace doctor
