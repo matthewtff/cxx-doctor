@@ -11,7 +11,7 @@ oodb:
 	make -C external/oodb/src -j3 static
 
 doctor:
-	make -C src/
+	make -C src/ -j3
 
 clean: external-clean doctor-clean
 

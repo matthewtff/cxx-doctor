@@ -5,6 +5,7 @@
 
 #include <koohar/webpage.hh>
 #include <koohar/server_asio.hh>
+#include <koohar/date.hh>
 
 #include <oodb/oodb.hh>
 
@@ -101,14 +102,9 @@ int main (int argc, char* argv[])
 	Doctor doc(db);
 	koohar::ServerAsio server(port);
 
-	server.config(koohar::ServerConfig::SET_STATIC_DIR, "./public");
-	server.config(koohar::ServerConfig::SET_STATIC_URL, "/html");
-	server.config(koohar::ServerConfig::SET_STATIC_URL, "/music");
-	server.config(koohar::ServerConfig::SET_STATIC_URL, "/images");
-	server.config(koohar::ServerConfig::SET_STATIC_URL, "/js");
-	server.config(koohar::ServerConfig::SET_STATIC_URL, "/css");
-	server.config(koohar::ServerConfig::SET_STATIC_URL, "/tmpl");
-	server.config(koohar::ServerConfig::SET_STATIC_URL, "/lang");
+	server.load("./config.xml");
+
+	std::cout << "Current date: " << koohar::Date().toString() << std::endl;
 
 	server.listen( std::bind(&Doctor::processRequest, doc,
 		std::placeholders::_1, std::placeholders::_2) );
