@@ -9,6 +9,11 @@
 		<url>/music</url>
 		<url>/tmpl</url>
 		<url>/lang</url>
+		<url>/video</url>
 	</public_urls>
 	<use_ssl>1</use_ssl>
+	<error_pages>
+		<400>/html/400.html</400>
+		<404>/html/404.html</404>
+	</error_pages>
 </config>

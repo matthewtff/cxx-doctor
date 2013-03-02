@@ -1,6 +1,6 @@
 #include "servey.hh"
 
-#include <koohar/date.hh>
+#include <koohar.hh>
 
 #include "crypting.hh"
 

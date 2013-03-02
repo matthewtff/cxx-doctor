@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include <oodb/oodb.hh>
+#include <oodb.hh>
 
 namespace doctor {
 
@@ -32,7 +32,7 @@ public:
 
 private:
 	/** Security checks for name && password.
-	  * \return true if OK.
+	  * @return true if OK.
 	  */
 	bool checkLogin (const std::string& login);
 	bool checkPassword (const std::string& password);

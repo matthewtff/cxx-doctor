@@ -1,4 +1,4 @@
-define (['jquery', 'ejs', './utils', './menu'], function ($, ejs, utils, menu) {
+define (['jquery', './utils', './menu'], function ($, utils, menu) {
 
 	return {
 		load : function (patient_id) {

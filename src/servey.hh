@@ -4,7 +4,7 @@
 #include <string>
 #include <list>
 
-#include <oodb/oodb.hh>
+#include <oodb.hh>
 
 namespace doctor {
 

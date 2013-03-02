@@ -1,39 +1,61 @@
 #ifndef doctor_disease_hh
 #define doctor_disease_hh
 
-#include <koohar/request.hh>
-#include <koohar/response.hh>
+#include <koohar.hh>
+#include <oodb.hh>
 
-#include <oodb/oodb.hh>
-
-#include <string>
 #include <sstream>
+#include <string>
+#include <map>
+
+#include "ipage.hh"
 
 namespace doctor {
 
-class Disease {
+class Disease : public IPage {
 public:
-	enum { SearchMax = 5 };
+	static const unsigned short SearchMax = 5;
 
 public:
-	Disease (koohar::Request& Req, koohar::Response& Res, oodb::Db& db);
+	Disease () {}
+
+	virtual void process (koohar::Request& Req, koohar::Response& Res,
+		oodb::Db& db);
+
+	virtual void clear () {}
 
 public:
 	static const std::string m_prefix;
 
 private:
+
+	typedef void (Disease::*Callback) ();
+
+	typedef std::map<std::string, Callback> CallbackMap;
+
+private:
+
+	static CallbackMap initCallbacks ();
+
 	void load ();
 	void search ();
+	void get ();
+	void badRequest ();
+
 	bool checkSimilar (const std::string& key, const std::string& search_string,
 		std::stringstream& stream);
-	void get ();
 	void append (std::stringstream& stream, const std::string& key,
 		const std::string& string);
 
 private:
-	koohar::Request& m_req;
-	koohar::Response& m_res;
-	oodb::Db& m_db;
+	koohar::Request* m_req;
+	koohar::Response* m_res;
+	oodb::Db* m_db;
+
+	static CallbackMap m_callbacks;
+
+	static const std::string m_commands[];
+
 }; // class Disease
 
 } // namespace doctor

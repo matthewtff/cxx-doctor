@@ -1,22 +1,37 @@
 #ifndef doctor_inmate_hh
 #define doctor_inmate_hh
 
-#include <koohar/request.hh>
-#include <koohar/response.hh>
-
-#include <oodb/oodb.hh>
+#include <koohar.hh>
+#include <oodb.hh>
 
 #include <string>
+#include <map>
 
 #include "patient.hh"
 
+#include "ipage.hh"
+
 namespace doctor {
 
-class Inmate {
+class Inmate : public IPage {
 public:
-	Inmate (koohar::Request& Req, koohar::Response& Res, oodb::Db& db);
+	Inmate () {}
+
+	virtual void process (koohar::Request& Req, koohar::Response& Res,
+		oodb::Db& db);
+
+	virtual void clear () {}
 
 private:
+
+	typedef void (Inmate::*Callback) ();
+
+	typedef std::map<std::string, Callback> CallbackMap;
+
+private:
+
+	static CallbackMap initCallbacks ();
+
 	void load ();
 	void add ();
 	void search ();
@@ -24,12 +39,17 @@ private:
 	void all ();
 	void get ();
 	void del ();
+	void badRequest ();
 	void sendPatients (PatientList& patients);
 
 private:
-	koohar::Request& m_req;
-	koohar::Response& m_res;
-	oodb::Db& m_db;
+	koohar::Request* m_req;
+	koohar::Response* m_res;
+	oodb::Db* m_db;
+
+	static CallbackMap m_callbacks;
+	static const std::string m_commands[];
+
 }; // class Inmate
 
 } // namespace doctor

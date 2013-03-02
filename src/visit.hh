@@ -1,16 +1,21 @@
 #ifndef doctor_visit_hh
 #define doctor_visit_hh
 
-#include <koohar/request.hh>
-#include <koohar/response.hh>
+#include <koohar.hh>
+#include <oodb.hh>
 
-#include <oodb/oodb.hh>
+#include "ipage.hh"
 
 namespace doctor {
 
-class Visit {
+class Visit : public IPage {
 public:
-	Visit (koohar::Request& Req, koohar::Response& Res, oodb::Db& db);
+	Visit () {}
+
+	virtual void process (koohar::Request& Req, koohar::Response& Res,
+		oodb::Db& db);
+
+	virtual void clear () {}
 
 private:
 	void load ();
@@ -18,9 +23,9 @@ private:
 	void sendAll ();
 
 private:
-	koohar::Request& m_req;
-	koohar::Response& m_res;
-	oodb::Db& m_db;
+	koohar::Request* m_req;
+	koohar::Response* m_res;
+	oodb::Db* m_db;
 }; // class Visit
 
 } // namespace doctor

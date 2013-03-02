@@ -8,9 +8,26 @@ namespace doctor {
 
 const string Disease::m_prefix = "mkb_disease";
 
-Disease::Disease (Request& Req, Response& Res, Db& db) : m_req(Req),
-	m_res(Res), m_db(db)
+Disease::CallbackMap Disease::initCallbacks ()
 {
+	CallbackMap callbacks;
+	callbacks["search"] = &Disease::search;
+	callbacks["get"] = &Disease::get;
+	return callbacks;
+}
+
+Disease::CallbackMap Disease::m_callbacks = Disease::initCallbacks();
+
+const std::string Disease::m_commands[] = {
+	"search",
+	"get"
+};
+
+void Disease::process (Request& Req, Response& Res, Db& db)
+{
+	m_req = &Req;
+	m_res = &Res;
+	m_db = &db;
 	load();
 }
 
@@ -18,14 +35,10 @@ Disease::Disease (Request& Req, Response& Res, Db& db) : m_req(Req),
 
 void Disease::load ()
 {
-	if (m_req.contains("search"))
-		search();
-	else if (m_req.contains("get"))
-		get();
-	else {
-		m_res.writeHead(200);
-		m_res.end();
-	}
+	for (size_t counter = 0; counter < m_callbacks.size(); ++counter)
+		if (m_req->contains(m_commands[counter]))
+			return (this->*m_callbacks[m_commands[counter]])();
+	badRequest();
 }
 
 void Disease::search ()
@@ -33,10 +46,10 @@ void Disease::search ()
 	stringstream send_data;
 	send_data << "{\"diseases\":[";
 
-	string search_string = m_req.body("search_string");
+	string search_string = m_req->body("search_string");
 
 	unsigned int found = 0;
-	Set& all = m_db.getSet(m_prefix);
+	Set& all = m_db->getSet(m_prefix);
 	for (auto it = all.begin(); it != all.end() && found < SearchMax; ++it) {
 		if (checkSimilar(*it, search_string, send_data)) {
 			++found;
@@ -45,18 +58,18 @@ void Disease::search ()
 
 	send_data << "]}";
 
-	m_res.writeHead(200);
-	m_res.header("Content-Type", "application/json");
-	m_res.end(send_data.str());
+	m_res->writeHead(200);
+	m_res->header("Content-Type", "application/json");
+	m_res->end(send_data.str());
 }
 
 bool Disease::checkSimilar (const string& key, const string& search_string,
 	stringstream& stream)
 {
-	if (!m_db.checkSet(m_prefix, key))
+	if (!m_db->checkSet(m_prefix, key))
 		return false;
 
-	string real_value = m_db.getString(m_prefix + ":" + key);
+	string real_value = m_db->getString(m_prefix + ":" + key);
 
 	if (real_value.length() < search_string.length())
 		return false;
@@ -72,14 +85,20 @@ bool Disease::checkSimilar (const string& key, const string& search_string,
 }
 
 void Disease::get () {
-	string real_value = m_db.getString(m_prefix + ":" + m_req.body("key"));
+	string real_value = m_db->getString(m_prefix + ":" + m_req->body("key"));
 	stringstream send_data;
-	send_data << "{\"diseases\":[{\"key\":\"" << m_req.body("key")
+	send_data << "{\"diseases\":[{\"key\":\"" << m_req->body("key")
 		<< "\",\"value\":\"" << real_value << "\"}]}";
 
-	m_res.writeHead(200);
-	m_res.header("Content-Type", "application/json");
-	m_res.end(send_data.str());
+	m_res->writeHead(200);
+	m_res->header("Content-Type", "application/json");
+	m_res->end(send_data.str());
+}
+
+void Disease::badRequest ()
+{
+	m_res->writeHead(400);
+	m_res->end();
 }
 
 void Disease::append (stringstream& stream, const string& key,
@@ -90,6 +109,5 @@ void Disease::append (stringstream& stream, const string& key,
 		stream << ",";
 	stream << "{\"key\":\"" << key << "\",\"value\":\"" << string << "\"}";
 }
-
 
 } // namespace doctor

@@ -1,21 +1,26 @@
 #ifndef doctor_settings_hh
 #define doctor_settings_hh
 
-#include <koohar/request.hh>
-#include <koohar/response.hh>
-
-#include <oodb/oodb.hh>
+#include <koohar.hh>
+#include <oodb.hh>
 
 #include <string>
 
+#include "ipage.hh"
+
 namespace doctor {
 
-class Settings {
+class Settings : public IPage {
 public:
 	static const std::string m_prefix;
 
 public:
-	Settings (koohar::Request& Req, koohar::Response& Res, oodb::Db& db);
+	Settings () {}
+
+	virtual void process (koohar::Request& Req, koohar::Response& Res,
+		oodb::Db& db);
+
+	virtual void clear () {}
 
 private:
 	void load ();
@@ -23,9 +28,9 @@ private:
 	void get ();
 
 private:
-	koohar::Request& m_req;
-	koohar::Response& m_res;
-	oodb::Db& m_db;
+	koohar::Request* m_req;
+	koohar::Response* m_res;
+	oodb::Db* m_db;
 }; // class Settings
 
 

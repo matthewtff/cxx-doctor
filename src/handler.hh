@@ -11,10 +11,7 @@ typedef DWORD HandlerGet;
 static const DWORD QUIT_EVENT = CTRL_CLOSE_EVENT;
 static const DWORD TERM_EVENT = CTRL_SHUTDOWN_EVENT;
 
-void setHandler(int Add, PHANDLER_ROUTINE Routine)
-{
-	SetConsoleCtrlHandler(Routine, Add);
-}
+void setHandler(int Add, PHANDLER_ROUTINE Routine);
 
 #else /* _WIN32 */
 
@@ -29,10 +26,7 @@ enum {
 	TERM_EVENT = SIGTERM
 };
 
-void setHandler(int Sig, HandlerRet(* Routine)(HandlerGet))
-{
-	signal(Sig, Routine);
-}
+void setHandler(int Sig, HandlerRet(* Routine)(HandlerGet));
 
 #endif /* _WIN32 */
 
