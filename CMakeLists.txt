@@ -6,9 +6,9 @@ subdirs (
 	external/oodb
 )
 
-if (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+if (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
-	SET (warnings "-Wall -Wextra -Woverloaded-virtual -Werror")
+	SET (warnings "-Wall -Wextra -Woverloaded-virtual")
 
 	SET (common_flags "-std=c++0x -stdlib=libc++ -fPIC")
 
@@ -26,7 +26,19 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBS
 
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	
-endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD")
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+
+include_directories (
+	/opt/local/include
+)
+
+link_directories (
+	/opt/local/lib
+)
+
+endif (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/build)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
@@ -40,7 +52,7 @@ set (doctor_libs
 	${external_libs}
 	pthread
 	ssl
-	boost_system
+	boost_system-mt
 )
 
 include_directories (
