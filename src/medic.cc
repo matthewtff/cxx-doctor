@@ -1,5 +1,8 @@
 #include "medic.hh"
 
+#include <list>
+#include <string>
+
 #include "crypting.hh"
 
 using namespace oodb;
@@ -12,24 +15,22 @@ const std::string Medic::m_prefix = "medic";
 Medic::Medic (Db& db) : m_db(db)
 {}
 
-bool Medic::logIn (const string& login, const string& password)
+bool Medic::authorize (const string& login, const string& password)
 {
 	if (login.empty() || password.empty())
 		return false;
-	
-	string key = generateKey(login, password);
 
-	if (m_db.checkSet(m_prefix, login)) {
-		if (m_db.getString(key + ":password") == hash(password))
-			return true;
-		else {
-			m_error = "Login/password mismatch.";
-			return false;
-		}
-	} else {
+	string key = generateKey(login);
+
+	if (!m_db.checkSet(m_prefix, login)) {
 		m_error = "Medic does not exist.";
 		return false;
 	}
+	if (hash(password) != m_db.getString(key + ":password")) {
+		m_error = "Login/password mismatch.";
+		return false;
+	}
+	return true;
 }
 
 bool Medic::reg (const string& login, const string& password,
@@ -53,12 +54,12 @@ bool Medic::reg (const string& login, const string& password,
 
 	if (m_db.checkSet(m_prefix, login)) {
 		// Do not register new user, if login already used.
-		m_error = "Medic exists.";
+		m_error = "Medic already exists.";
 		return false;
 	}
 	m_db.addSet(m_prefix, login);
 
-	string key = generateKey(login, password);
+	string key = generateKey(login);
 	m_db.setString(key + ":password", hash(password));
 	m_db.setString(key + ":name", name);
 	m_db.setString(key + ":surname", surname);
@@ -75,7 +76,11 @@ bool Medic::load (const string& login, const string& password)
 	}
 	m_login = login;
 
-	string key = generateKey(login, password);
+	string key = generateKey(login);
+	if (hash(password) != m_db.getString(key + ":password")) {
+		m_error = "Password mismatch.";
+		return false;
+	}
 	m_name = m_db.getString(key + ":name");
 	m_surname = m_db.getString(key + ":surname");
 	m_second_name = m_db.getString(key + ":second_name");
@@ -83,9 +88,33 @@ bool Medic::load (const string& login, const string& password)
 	return true;
 }
 
-string Medic::generateKey (const string& login, const string& password)
+string Medic::generateKey (const string& login)
 {
-	return m_prefix + ":" + hash(login + password);
+	return m_prefix + ":" + hash(login);
+}
+
+list<string> Medic::list (Db& db)
+{
+	::list<string> all_medics;
+	Set medics_set = db.getSet(m_prefix);
+	for (auto medic = medics_set.begin(); medic != medics_set.end(); ++medic)
+		all_medics.push_back(*medic);
+	return all_medics;
+}
+
+bool Medic::remove (Db& db, const string& login)
+{
+	if (!db.checkSet(m_prefix, login))
+		return false;
+
+	string key = generateKey(login);
+	db.unsetString(key + ":password");
+	db.unsetString(key + ":name");
+	db.unsetString(key + ":surname");
+	db.unsetString(key + ":second_name");
+	db.unsetString(key + ":category");
+
+	return db.remSet(m_prefix, login);
 }
 
 // private

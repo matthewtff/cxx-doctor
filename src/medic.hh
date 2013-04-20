@@ -1,6 +1,7 @@
-#ifndef doctor_user_hh
-#define doctor_user_hh
+#ifndef doctor_medic_hh
+#define doctor_medic_hh
 
+#include <list>
 #include <string>
 
 #include <oodb.hh>
@@ -10,7 +11,7 @@ namespace doctor {
 class Medic {
 public:
 	Medic (oodb::Db& db);
-	bool logIn (const std::string& login, const std::string& password);
+	bool authorize (const std::string& login, const std::string& password);
 	bool reg (const std::string& login, const std::string& password,
 		const std::string& password_confirm, const std::string& name,
 		const std::string& sur_name, const std::string& second_name,
@@ -24,11 +25,12 @@ public:
 	std::string second_name () const { return m_second_name; }
 	std::string category () const { return m_category; }
 
-	static std::string generateKey (const std::string& login,
-		const std::string& password);
-
 public:
 	static const std::string m_prefix;
+
+	static std::string generateKey (const std::string& login);
+	static std::list<std::string> list (oodb::Db& db);
+	static bool remove (oodb::Db& db, const std::string& login);
 
 private:
 	/** Security checks for name && password.
@@ -50,4 +52,4 @@ private:
 
 } // namespace doctor
 
-#endif // doctor_user_hh
+#endif // doctor_medic_hh

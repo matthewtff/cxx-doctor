@@ -1,5 +1,5 @@
-#ifndef doctor_register_hh
-#define doctor_register_hh
+#ifndef doctor_user_hh
+#define doctor_user_hh
 
 #include <koohar.hh>
 #include <oodb.hh>
@@ -10,9 +10,8 @@
 
 namespace doctor {
 
-class Register : public IPage {
+class User : public IPage {
 public:
-	Register () {}
 
 	virtual void process (koohar::Request& Req, koohar::Response& Res,
 		oodb::Db& db);
@@ -21,13 +20,16 @@ public:
 
 private:
 	void load ();
+	void reg ();
+	void list ();
+	void remove ();
 
 private:
 	oodb::Db* m_db;
 	koohar::Request* m_req;
 	koohar::Response* m_res;
-}; // class Register
+}; // class User
 
 } // namespace doctor
 
-#endif // doctor_register_hh
+#endif // doctor_user_hh

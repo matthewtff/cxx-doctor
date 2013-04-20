@@ -8,7 +8,7 @@
 #include <list>
 #include <map>
 
-#include "register.hh"
+#include "user.hh"
 #include "visit.hh"
 #include "inmate.hh"
 #include "insurance.hh"
@@ -26,15 +26,15 @@ const std::string Doctor::m_views_dir = "./views/";
 
 Doctor::Doctor (oodb::Db& database) : m_db(database)
 {
-	m_handlers["/register"].reset(dynamic_cast<IPage*>(new Register));
-	m_handlers["/visit"].reset(dynamic_cast<IPage*>(new Visit));
-	m_handlers["/inmate"].reset(dynamic_cast<IPage*>(new Inmate));
-	m_handlers["/insurance"].reset(dynamic_cast<IPage*>(new Insurance));
-	m_handlers["/machine"].reset(dynamic_cast<IPage*>(new Machine));
-	m_handlers["/settings"].reset(dynamic_cast<IPage*>(new Settings));
-	m_handlers["/disease"].reset(dynamic_cast<IPage*>(new Disease));
+	m_handlers["/user"].reset(new User);
+	m_handlers["/visit"].reset(new Visit);
+	m_handlers["/inmate"].reset(new Inmate);
+	m_handlers["/insurance"].reset(new Insurance);
+	m_handlers["/machine"].reset(new Machine);
+	m_handlers["/settings"].reset(new Settings);
+	m_handlers["/disease"].reset(new Disease);
 
-	m_routes.push_back("/register");
+	m_routes.push_back("/user");
 	m_routes.push_back("/visit");
 	m_routes.push_back("/inmate");
 	m_routes.push_back("/insurance");
@@ -76,3 +76,4 @@ void Doctor::findRoute (koohar::Request& Req, koohar::Response& Res)
 }
 
 } // namespace doctor
+
