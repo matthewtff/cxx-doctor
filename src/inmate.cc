@@ -1,12 +1,8 @@
 #include "inmate.hh"
 
-#include <sstream>
-
 using namespace koohar;
 using namespace oodb;
 using namespace std;
-
-#include <iostream>
 
 namespace doctor {
 
@@ -48,7 +44,7 @@ void Inmate::load ()
 	for (size_t counter = 0; counter < m_callbacks.size(); ++counter)
 		if (m_req->contains(m_commands[counter]))
 			return (this->*m_callbacks[m_commands[counter]]) ();
-	badRequest();
+	m_res->badRequest();
 }
 
 void Inmate::add ()
@@ -66,22 +62,17 @@ void Inmate::add ()
 		m_req->body("card")
 	);
 
-	stringstream send_data;
-	send_data << "{\"answer\":\"" << (succ ? "success" : patient.error())
-		<< "\", \"id\":\"" << patient.key() << "\"}";
-
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
-	m_res->end(send_data.str());
+	JSON::Object send_data;
+	send_data["answer"] = succ ? "success" : patient.error();
+	send_data["id"] = patient.key();
+	m_res->sendJSON(send_data);
 }
 
 void Inmate::edit ()
 {
 	Patient patient(*m_db);
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
 	if (!patient.load(m_req->body("id"))) {
-		m_res->end("Bad id.");
+		m_res->badRequest();
 		return;
 	}
 	patient.name(m_req->body("name"));
@@ -93,9 +84,10 @@ void Inmate::edit ()
 	patient.insurance(m_req->body("insurance"));
 	patient.insuranceNumber(m_req->body("insurance_number"));
 	patient.card(m_req->body("card"));
-	std::string answer = "{\"answer\":\"";
-	answer.append(patient.save() ? "success\"}" : "Error\"}");
-	m_res->end(answer);
+
+	JSON::Object send_data;
+	send_data["answer"] = patient.save() ? "success" : "Error";
+	m_res->sendJSON(send_data);
 }
 
 void Inmate::search ()
@@ -126,41 +118,30 @@ void Inmate::del ()
 {
 	bool succ = Patient::del(*m_db, m_req->body("id"));
 	m_res->writeHead(200);
-	m_res->header("Content-Type", "plain/text");
+	m_res->header("Content-Type", "text/plain");
 	m_res->end(succ ? "success" : "Error: patient not found");
-}
-
-void Inmate::badRequest ()
-{
-	m_res->writeHead(400);
-	m_res->end();
 }
 
 void Inmate::sendPatients (PatientList& patients)
 {
-	stringstream send_data;
-	send_data << "{\"inmates\":[";
+	JSON::Object send_data;
 
 	for (auto it = patients.begin(); it != patients.end(); ++it) {
-		if (it != patients.begin())
-			send_data << ",";
+		JSON::Object patient;
+		patient["name"] = it->name();
+		patient["surname"] = it->surname();
+		patient["second_name"] = it->secondName();
+		patient["date"] = it->date();
+		patient["sex"] = it->sex();
+		patient["address"] = it->address();
+		patient["insurance"] = it->insurance();
+		patient["insurance_number"] = it->insurance_number();
+		patient["card"] = it->card();
+		patient["id"] = it->key();
 
-		send_data << "{\"name\":\"" << it->name() << "\","
-			<< "\"surname\":\"" << it->surname() << "\","
-			<< "\"second_name\":\"" << it->secondName() << "\","
-			<< "\"date\":\"" << it->date() << "\","
-			<< "\"sex\":\"" << it->sex() << "\","
-			<< "\"address\":\"" << it->address() << "\","
-			<< "\"insurance\":\"" << it->insurance() << "\","
-			<< "\"insurance_number\":\"" << it->insurance_number() << "\","
-			<< "\"card\":\"" << it->card() << "\","
-			<< "\"id\":\"" << it->key() << "\"}";
+		send_data["inmates"].addToArray(patient);
 	}
-	send_data << "]}";
-
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
-	m_res->end(send_data.str());
+	m_res->sendJSON(send_data);
 }
 
 } // namespace doctor

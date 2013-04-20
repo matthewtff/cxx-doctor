@@ -1,7 +1,5 @@
 #include "insurance.hh"
 
-#include <sstream>
-
 using namespace koohar;
 using namespace oodb;
 using namespace std;
@@ -40,7 +38,7 @@ void Insurance::load ()
 	for (size_t counter = 0; counter < m_callbacks.size(); ++counter)
 		if (m_req->contains(m_commands[counter]))
 			return (this->*m_callbacks[m_commands[counter]]) ();
-	badRequest();
+	m_res->badRequest();
 }
 
 void Insurance::saveNew ()
@@ -59,32 +57,19 @@ void Insurance::saveNew ()
 	}
 
 	m_res->writeHead(200);
-	m_res->header("Content-Type", "plain/text");
+	m_res->header("Content-Type", "text/plain");
 	m_res->end(msg);
 }
 
 void Insurance::sendAll ()
 {
-	stringstream send_data;
-	send_data << "{\"insurances\":[";
+	JSON::Object send_data;
 
 	Set& all = m_db->getSet(m_prefix);
-	for (auto it = all.begin(); it != all.end(); ++it) {
-		if (it != all.begin())
-			send_data << ",";
-		send_data  << "\"" << *it << "\"";
-	}
-	send_data << "]}";
+	for (auto it = all.begin(); it != all.end(); ++it)
+		send_data["insurances"].addToArray(JSON::Object(*it));
 	
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
-	m_res->end(send_data.str());
-}
-
-void Insurance::badRequest ()
-{
-	m_res->writeHead(400);
-	m_res->end();
+	m_res->sendJSON(send_data);
 }
 
 } // namespace doctor

@@ -39,7 +39,6 @@ private:
 	void all ();
 	void get ();
 	void del ();
-	void badRequest ();
 	void sendPatients (PatientList& patients);
 
 private:

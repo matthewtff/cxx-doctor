@@ -38,33 +38,27 @@ void Disease::load ()
 	for (size_t counter = 0; counter < m_callbacks.size(); ++counter)
 		if (m_req->contains(m_commands[counter]))
 			return (this->*m_callbacks[m_commands[counter]])();
-	badRequest();
+	m_res->badRequest();
 }
 
 void Disease::search ()
 {
-	stringstream send_data;
-	send_data << "{\"diseases\":[";
-
+	JSON::Object send_data;
 	string search_string = m_req->body("search_string");
 
 	unsigned int found = 0;
 	Set& all = m_db->getSet(m_prefix);
 	for (auto it = all.begin(); it != all.end() && found < SearchMax; ++it) {
-		if (checkSimilar(*it, search_string, send_data)) {
+		if (checkSimilar(*it, search_string, send_data["diseases"])) {
 			++found;
 		}
 	}
 
-	send_data << "]}";
-
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
-	m_res->end(send_data.str());
+	m_res->sendJSON(send_data);
 }
 
 bool Disease::checkSimilar (const string& key, const string& search_string,
-	stringstream& stream)
+	JSON::Object& stream)
 {
 	if (!m_db->checkSet(m_prefix, key))
 		return false;
@@ -73,41 +67,26 @@ bool Disease::checkSimilar (const string& key, const string& search_string,
 
 	if (real_value.length() < search_string.length())
 		return false;
-	for (unsigned int count = 0; count < search_string.length(); ++count) {
+	for (unsigned int count = 0; count < search_string.length(); ++count)
 		if (real_value[count] != search_string[count])
 			return false;
-	}
 
-	append(stream, key, real_value);
-
+	JSON::Object disease;
+	disease["key"] = key;
+	disease["value"] = real_value;
+	stream.addToArray(disease);
 	return true;
-
 }
 
 void Disease::get () {
 	string real_value = m_db->getString(m_prefix + ":" + m_req->body("key"));
-	stringstream send_data;
-	send_data << "{\"diseases\":[{\"key\":\"" << m_req->body("key")
-		<< "\",\"value\":\"" << real_value << "\"}]}";
 
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
-	m_res->end(send_data.str());
-}
-
-void Disease::badRequest ()
-{
-	m_res->writeHead(400);
-	m_res->end();
-}
-
-void Disease::append (stringstream& stream, const string& key,
-	const string& string)
-{
-	bool first = stream.str().length() < 15; // approx length of '{"diseases":['
-	if (!first)
-		stream << ",";
-	stream << "{\"key\":\"" << key << "\",\"value\":\"" << string << "\"}";
+	JSON::Object send_data;
+	JSON::Object disease;
+	disease["key"] = m_req->body("key");
+	disease["value"] = real_value;
+	send_data["diseases"].addToArray(disease);
+	m_res->sendJSON(send_data);
 }
 
 } // namespace doctor

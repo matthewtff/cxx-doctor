@@ -35,7 +35,6 @@ private:
 	void sendAll ();
 	void remove ();
 	void change ();
-	void badRequest ();
 
 private:
 	koohar::Request* m_req;

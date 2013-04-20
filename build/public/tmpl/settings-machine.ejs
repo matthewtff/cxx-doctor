@@ -92,7 +92,11 @@
 </script>
 
 <%
-	var machines = window.utils.syncAjax("/machine/all").machines;
+	var machines = window.utils.syncAjax("/machine/all");
+	if (machines)
+		machines = machines.machines;
+	if (!machines)
+		machines = [];
 %>
 
 	<div class="settings-machines">

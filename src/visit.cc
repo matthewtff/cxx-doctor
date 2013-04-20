@@ -1,7 +1,5 @@
 #include "visit.hh"
 
-#include <sstream>
-
 #include "servey.hh"
 
 using namespace koohar;
@@ -26,10 +24,8 @@ void Visit::load ()
 		saveNew();
 	else if (m_req->contains("all"))
 		sendAll();
-	else {
-		m_res->writeHead(200);
-		m_res->end();
-	}
+	else
+		m_res->badRequest();
 }
 
 void Visit::saveNew ()
@@ -57,24 +53,21 @@ void Visit::sendAll ()
 {
 	ServeyList serveys;
 	Servey::all(*m_db, serveys);
-	stringstream send_data;
-	send_data << "{\"visits\":[";
+
+	JSON::Object send_data;
+
 	for (auto it = serveys.begin(); it != serveys.end(); ++it) {
-		if (it != serveys.begin())
-			send_data << ",";
-		send_data << "{\"type\":\"" << it->type() << "\",";
-		send_data << "\"date\":\"" << it->date() << "\",";
-		send_data << "\"dynamic\":\"" << it->dynamic() << "\",";
-		send_data << "\"patient\":\"" << it->patient() << "\",";
-		send_data << "\"diagnosis\":\"" << it->diagnosis() << "\",";
-		send_data << "\"data\":\"" << it->data() << "\",";
-		send_data << "\"key\":\"" << it->key() << "\"}";
+		JSON::Object visit;
+		visit["type"] = it->type();
+		visit["date"] = it->date();
+		visit["dynamic"] = it->dynamic();
+		visit["patient"] = it->patient();
+		visit["diagnosis"] = it->diagnosis();
+		visit["data"] = it->data();
+		visit["key"] = it->key();
+		send_data["visits"].addToArray(visit);
 	}
-	send_data << "]}";
-	
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
-	m_res->end(send_data.str());
+	m_res->sendJSON(send_data);
 }
 
 } // namespace doctor

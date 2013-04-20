@@ -31,6 +31,8 @@ int main (int argc, char* argv[])
 	setHandler(QUIT_EVENT, sigHandler);
 	setHandler(TERM_EVENT, sigHandler);
 
+	AddMKBToDb(db);
+
 	Doctor doc(db);
 	koohar::ServerAsio server(port);
 

@@ -1,7 +1,5 @@
 #include "machine.hh"
 
-#include <sstream>
-
 #include "device.hh"
 
 using namespace koohar;
@@ -44,7 +42,7 @@ void Machine::load ()
 	for (size_t counter = 0; counter < m_callbacks.size(); ++counter)
 		if (m_req->contains(m_commands[counter]))
 			return (this->*m_callbacks[m_commands[counter]]) ();
-	badRequest();
+	m_res->badRequest();
 }
 
 void Machine::saveNew ()
@@ -59,23 +57,17 @@ void Machine::saveNew ()
 
 void Machine::sendAll ()
 {
-	stringstream send_data;
-	send_data << "{\"machines\":[";
+	JSON::Object send_data;
 
 	DeviceList all;
 	Device::all(*m_db, all);
 	for (auto it = all.begin(); it != all.end(); ++it) {
-		if (it != all.begin())
-			send_data << ",";
-		send_data << "{\"name\":\"" << it->name() << "\",";
-		send_data << "\"info\":" << it->info() << "}";
+		JSON::Object device;
+		device["name"] = it->name();
+		device["info"] = JSON::parse(it->info());
+		send_data["machines"].addToArray(device);
 	}
-
-	send_data << "]}";
-
-	m_res->writeHead(200);
-	m_res->header("Content-Type", "application/json");
-	m_res->end(send_data.str());
+	m_res->sendJSON(send_data);
 }
 
 void Machine::remove ()
@@ -97,12 +89,6 @@ void Machine::change ()
 	m_res->writeHead(200);
 	m_res->header("Content-Type", "text/plain");
 	m_res->end(succ ? "success" : device.error());
-}
-
-void Machine::badRequest ()
-{
-	m_res->writeHead(400);
-	m_res->end();
 }
 
 } // namespace doctor

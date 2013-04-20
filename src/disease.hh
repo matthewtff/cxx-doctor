@@ -42,10 +42,8 @@ private:
 	void get ();
 	void badRequest ();
 
-	bool checkSimilar (const std::string& key, const std::string& search_string,
-		std::stringstream& stream);
-	void append (std::stringstream& stream, const std::string& key,
-		const std::string& string);
+	bool checkSimilar (const std::string& key,
+		const std::string& search_string, koohar::JSON::Object& stream);
 
 private:
 	koohar::Request* m_req;

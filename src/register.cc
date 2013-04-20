@@ -32,7 +32,7 @@ void Register::load ()
 	);
 
 	m_res->writeHead(200);
-	m_res->header("Content-Type", "plain/text");
+	m_res->header("Content-Type", "text/plain");
 	m_res->end(succ ? "success" : medic.error());
 }
 
