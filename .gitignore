@@ -1,4 +1,5 @@
 # Compiled Object files
+build/doctor
 *.slo
 *.lo
 *.o
@@ -10,3 +11,18 @@
 *.lai
 *.la
 *.a
+
+# CMake & make files
+Makefile
+CMakeCache.txt
+CMakeFiles/*
+cmake_*
+
+# Sublime workspace file
+doctor.sublime-workspace
+
+# CTags index files
+.tags*
+
+# Mac OS X
+.DS_Store

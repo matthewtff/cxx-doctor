@@ -1,0 +1,12 @@
+{
+	"folders":
+	[
+		{
+			"path": "./"
+		}
+	],
+	"settings":
+	{
+		"ctags_command" : "ctags --languages=C++,JavaScript,HTML --exclude=lib --exclude=.git --exclude=doc -R -f .tags"
+	}
+}

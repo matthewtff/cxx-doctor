@@ -73,7 +73,7 @@ set ( doctor_src
 	src/md5.cc
 	src/medic.cc
 	src/patient.cc
-	src/register.cc
+	src/user.cc
 	src/servey.cc
 	src/settings.cc
 	src/visit.cc
