@@ -12,6 +12,18 @@ using namespace std;
 
 namespace doctor {
 
+User::CallbackMap User::initCallbacks ()
+{
+	CallbackMap callbacks;
+	callbacks["register"] = &User::reg;
+	callbacks["all"] = &User::list;
+	callbacks["remove"] = &User::remove;
+	callbacks["get"] = &User::get;
+	return callbacks;
+}
+
+User::CallbackMap User::m_callbacks = User::initCallbacks();
+
 void User::process (Request& Req, Response& Res, Db& db)
 {
 	m_db = &db;
@@ -24,16 +36,13 @@ void User::process (Request& Req, Response& Res, Db& db)
 
 void User::load ()
 {
-	if (m_req->contains("register"))
-		reg();
-	else if (m_req->contains("all"))
-		list();
-	else if (m_req->contains("remove"))
-		remove();
-	else {
-		m_res->writeHead(400);
-		m_res->end();
+	for (CallbackMap::iterator callback = m_callbacks.begin();
+		callback != m_callbacks.end(); ++callback)
+	{
+		if (m_req->contains(callback->first))
+			return (this->*(callback->second))();
 	}
+	m_res->badRequest();
 }
 
 void User::reg ()
@@ -76,6 +85,24 @@ void User::remove ()
 	m_res->writeHead(200);
 	m_res->header("Content-Type", "text/plain");
 	m_res->end(success ? "success" : "Medic not found");
+}
+
+void User::get ()
+{
+	Medic medic(*m_db);
+	const bool success = medic.load(m_req->body("login"),
+		m_req->body("password"));
+	if (!success)
+		m_res->badRequest();
+
+	JSON::Object user_json;
+	user_json["login"] = medic.login();
+	user_json["name"] = medic.name();
+	user_json["surname"] = medic.surname();
+	user_json["second_name"] = medic.second_name();
+	user_json["category"] = medic.category();
+	m_res->writeHead(200);
+	m_res->end(user_json.toString());
 }
 
 } // namespace doctor

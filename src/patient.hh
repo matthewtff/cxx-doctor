@@ -15,7 +15,8 @@ typedef std::list<Patient> PatientList;
 class Patient {
 public:
 
-	enum { SearchMax = 5 };
+	static const unsigned short MaxSearch = 5;
+	static const unsigned short MaxStringLength = 2048;
 
 public:
 	Patient (oodb::Db& db);

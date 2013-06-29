@@ -18,8 +18,6 @@
 
 #include "ipage.hh"
 
-#include "handler.hh"
-
 namespace doctor {
 
 const std::string Doctor::m_views_dir = "./views/";
@@ -33,16 +31,7 @@ Doctor::Doctor (oodb::Db& database) : m_db(database)
 	m_handlers["/machine"].reset(new Machine);
 	m_handlers["/settings"].reset(new Settings);
 	m_handlers["/disease"].reset(new Disease);
-
-	m_routes.push_back("/user");
-	m_routes.push_back("/visit");
-	m_routes.push_back("/inmate");
-	m_routes.push_back("/insurance");
-	m_routes.push_back("/machine");
-	m_routes.push_back("/settings");
-	m_routes.push_back("/disease");
 }
-
 
 void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
 {
@@ -53,26 +42,27 @@ void Doctor::processRequest(koohar::Request& Req, koohar::Response &Res)
 		m_db.save();
 		Res.writeHead(200);
 		Res.end(std::string("success"));
-	} else {
+	} else
 		findRoute (Req, Res);
-	}
 }
 
 void Doctor::findRoute (koohar::Request& Req, koohar::Response& Res)
 {
+	typedef Handlers::value_type HandlerInfo;
 	bool no_match = true;
-	std::for_each(m_routes.begin(), m_routes.end(),
-		[&](const std::string& route) {
-			if (no_match && Req.contains(route)) {
-				auto page = m_handlers[route];
-				page->process(Req, Res, m_db);
-				page->clear();
+	std::for_each(m_handlers.begin(), m_handlers.end(),
+		[&](const HandlerInfo& handler_info) {
+			if (no_match && Req.contains(handler_info.first)) {
+				handler_info.second->process(Req, Res, m_db);
+				handler_info.second->clear();
 				no_match = false;
 			}
 		}
 	);
-	if (no_match)
-		koohar::WebPage(Req, Res, m_views_dir + "./index.html").render();
+	if (no_match) {
+		Res.redirect("/html/index.html");
+		Res.end();
+	}
 }
 
 } // namespace doctor

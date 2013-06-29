@@ -22,7 +22,6 @@ public:
 private:
 
 	typedef std::map<std::string, std::shared_ptr<IPage>> Handlers;
-	typedef std::list<std::string> Routes;
 
 private:
 
@@ -35,7 +34,6 @@ private:
 private:
 	oodb::Db& m_db;
 	Handlers m_handlers;
-	Routes m_routes;
 }; // class Doctor
 
 } // namespace doctor

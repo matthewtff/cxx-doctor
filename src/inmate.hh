@@ -15,7 +15,6 @@ namespace doctor {
 
 class Inmate : public IPage {
 public:
-	Inmate () {}
 
 	virtual void process (koohar::Request& Req, koohar::Response& Res,
 		oodb::Db& db);

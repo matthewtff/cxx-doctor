@@ -3,13 +3,12 @@
 	<public_dir>./public</public_dir>
 	<public_urls>
 		<url>/html</url>
-		<url>/images</url>
+		<url>/img</url>
 		<url>/js</url>
 		<url>/css</url>
 		<url>/music</url>
 		<url>/tmpl</url>
 		<url>/lang</url>
-		<url>/video</url>
 	</public_urls>
 	<use_ssl>1</use_ssl>
 	<error_pages>

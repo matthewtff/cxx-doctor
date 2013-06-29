@@ -104,17 +104,17 @@ bool Patient::search (Db& db, const string& search_string,
 		return false;
 	
 	bool found = false;
-	Set& all = db.getSet(m_prefix);
+	const Set& all = db.getSet(m_prefix);
 	for (auto it = all.begin(); it != all.end(); ++it) {
-		if (checkSimilar(db, *it, search_string)) {
-			Patient patie(db);
-			if (!patie.load(*it))
-				continue;
-			patients.push_back(patie);
-			found = true;
-			if (patients.size() >= SearchMax) // We've got all we need.
-				return found; // true
-		}
+		if (!checkSimilar(db, *it, search_string))
+			continue;
+		Patient patie(db);
+		if (!patie.load(*it))
+			continue;
+		patients.push_back(patie);
+		found = true;
+		if (patients.size() >= MaxSearch) // We've got all we need.
+			return found; // true
 	}
 	return found;
 }
@@ -125,20 +125,14 @@ bool Patient::checkSimilar (Db& db, const string& key,
 	if (!db.checkSet(m_prefix, key))
 		return false;
 
-	string real_surname = db.getString(key + ":surname");
+	const string real_surname = db.getString(key + ":surname");
 
-	if (real_surname.length() < search_string.length())
-		return false;
-	for (unsigned int count = 0; count < search_string.length(); ++count) {
-		if (real_surname[count] != search_string[count])
-			return false;
-	}
-	return true;
+	return real_surname.find(search_string) != string::npos;
 }
 
 void Patient::all (Db& db, PatientList& patients)
 {
-	Set& all = db.getSet(m_prefix);
+	const Set& all = db.getSet(m_prefix);
 	for (auto it = all.begin(); it != all.end(); ++it) {
 		Patient patie(db);
 		if (!patie.load(*it))
@@ -164,7 +158,8 @@ string Patient::generateKey (const string& name, const string& surname)
 
 bool Patient::checkSecurity (const string& value)
 {
-	return (value.length() < 2048) && (value.find(":") == value.npos);
+	return (value.length() < MaxStringLength)
+		&& (value.find(":") == value.npos);
 }
 
 } // namespace doctor

@@ -62,8 +62,11 @@ void Inmate::add ()
 		m_req->body("card")
 	);
 
+	if (!succ) {
+		m_res->badRequest();
+		return;
+	}
 	JSON::Object send_data;
-	send_data["answer"] = succ ? "success" : patient.error();
 	send_data["id"] = patient.key();
 	m_res->sendJSON(send_data);
 }
