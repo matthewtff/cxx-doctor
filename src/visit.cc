@@ -2,6 +2,9 @@
 
 #include "servey.hh"
 
+#include <koohar.hh>
+#include <oodb.hh>
+
 using namespace koohar;
 using namespace oodb;
 using namespace std;

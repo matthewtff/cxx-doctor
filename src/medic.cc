@@ -3,6 +3,8 @@
 #include <list>
 #include <string>
 
+#include <oodb.hh>
+
 #include "crypting.hh"
 
 using namespace oodb;

@@ -4,7 +4,9 @@
 #include <list>
 #include <string>
 
-#include <oodb.hh>
+namespace oodb {
+	class Db;
+}
 
 namespace doctor {
 

@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 
+#include <koohar.hh>
+#include <oodb.hh>
+
 #include "medic.hh"
 
 using namespace koohar;

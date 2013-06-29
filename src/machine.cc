@@ -1,5 +1,8 @@
 #include "machine.hh"
 
+#include <koohar.hh>
+#include <oodb.hh>
+
 #include "device.hh"
 
 using namespace koohar;

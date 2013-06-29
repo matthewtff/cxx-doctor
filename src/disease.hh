@@ -1,14 +1,20 @@
 #ifndef doctor_disease_hh
 #define doctor_disease_hh
 
-#include <koohar.hh>
-#include <oodb.hh>
-
 #include <sstream>
 #include <string>
 #include <map>
 
 #include "ipage.hh"
+
+namespace koohar {
+	class Request;
+	class Response;
+}
+
+namespace oodb {
+	class Db;
+}
 
 namespace doctor {
 

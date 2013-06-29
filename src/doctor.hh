@@ -1,13 +1,19 @@
 #ifndef doctor_doctor_hh
 #define doctor_doctor_hh
 
-#include <koohar.hh>
-#include <oodb.hh>
-
 #include <memory>
 #include <string>
 #include <list>
 #include <map>
+
+namespace koohar {
+	class Request;
+	class Response;
+}
+
+namespace oodb {
+	class Db;
+}
 
 namespace doctor {
 

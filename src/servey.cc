@@ -1,6 +1,7 @@
 #include "servey.hh"
 
 #include <koohar.hh>
+#include <oodb.hh>
 
 #include "crypting.hh"
 

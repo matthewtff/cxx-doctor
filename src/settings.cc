@@ -2,7 +2,8 @@
 
 #include <sstream>
 
-#include <iostream>
+#include <koohar.hh>
+#include <oodb.hh>
 
 using namespace koohar;
 using namespace oodb;

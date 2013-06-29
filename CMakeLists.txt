@@ -24,8 +24,16 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBS
 		"${CMAKE_CXX_FLAGS_RELEASE} ${warnings} ${common_flags} -O2"
 	)
 
+	set (os_libs
+		boost_system-mt
+		pthread
+		ssl
+	)
+
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 	
+	set (os_libs)
+
 endif (${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "FreeBSD" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
@@ -50,9 +58,7 @@ set (external_libs
 
 set (doctor_libs
 	${external_libs}
-	pthread
-	ssl
-	boost_system-mt
+	${os_libs}
 )
 
 include_directories (

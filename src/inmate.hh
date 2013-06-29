@@ -1,15 +1,21 @@
 #ifndef doctor_inmate_hh
 #define doctor_inmate_hh
 
-#include <koohar.hh>
-#include <oodb.hh>
-
 #include <string>
 #include <map>
 
 #include "patient.hh"
 
 #include "ipage.hh"
+
+namespace koohar {
+	class Request;
+	class Response;
+}
+
+namespace oodb {
+	class Db;
+}
 
 namespace doctor {
 

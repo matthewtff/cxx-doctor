@@ -1,5 +1,7 @@
 #include "device.hh"
 
+#include <oodb.hh>
+
 using namespace oodb;
 using namespace std;
 

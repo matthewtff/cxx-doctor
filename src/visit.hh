@@ -1,10 +1,16 @@
 #ifndef doctor_visit_hh
 #define doctor_visit_hh
 
-#include <koohar.hh>
-#include <oodb.hh>
-
 #include "ipage.hh"
+
+namespace koohar {
+	class Request;
+	class Response;
+}
+
+namespace oodb {
+	class Db;
+}
 
 namespace doctor {
 
