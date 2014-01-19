@@ -10,3 +10,13 @@
 *.lai
 *.la
 *.a
+
+# CMake files
+CMakeFiles/
+cmake_install.cmake
+Makefile
+CMakeCache.txt
+
+# Build targets
+build/doctor
+
