@@ -16,14 +16,14 @@ using namespace doctor;
 
 static std::string db_name("doctordb.dat");
 static oodb::Db db = oodb::Db(db_name);
+koohar::ServerAsio* server_ptr = nullptr;
 
-HandlerRet sigHandler (HandlerGet sig);
+HandlerRet sigHandler (HandlerGet /* sig */);
 
 void AddMKBToDb(oodb::Db& db);
 
-int main (int argc, char* argv[])
-{
-	unsigned short port = (argc > 1)
+int main (int argc, char* argv[]) {
+	const unsigned short port = (argc > 1)
 		? static_cast<unsigned short>(std::atoi(argv[1]))
 		: 8000;
 
@@ -36,7 +36,9 @@ int main (int argc, char* argv[])
 	Doctor doc(db);
 	koohar::ServerAsio server(port);
 
-	server.load("./config.xml");
+	server.load("./config.json");
+
+  server_ptr = &server;
 
 	server.listen( std::bind(&Doctor::processRequest, doc,
 		std::placeholders::_1, std::placeholders::_2) );
@@ -44,15 +46,10 @@ int main (int argc, char* argv[])
 	return 0;
 }
 
-HandlerRet sigHandler (HandlerGet sig)
-{
-	if (sig == CTRL_C_EVENT || sig == QUIT_EVENT || sig == TERM_EVENT) {
-		db.save();
-		exit(0);
-	}
-#ifdef _WIN32
-	else return 0;
-#endif /* _WIN32 */
+HandlerRet sigHandler (HandlerGet) {
+  if (server_ptr)
+    server_ptr->stop();
+  db.save();
 }
 
 void delReturnes(std::string& str)
