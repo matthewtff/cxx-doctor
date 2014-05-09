@@ -1,0 +1,18 @@
+{
+  "public_dir": "./public",
+  "public_urls": [
+    "/html",
+    "/images",
+    "/js",
+    "/css",
+    "/music",
+    "/tmpl",
+    "/lang",
+    "/video"
+  ],
+  "use_ssl": true,
+  "error_pages": [
+    "400": "/html/400.html",
+    "404": "/html/404.html"
+  ]
+}
